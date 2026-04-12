@@ -25,7 +25,7 @@
         .list-table th, .list-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         .list-table th { background: #1a237e; color: white; }
 
-        /* --- MARKSHEET DESIGN (PREMIUM) --- */
+        /* --- MARKSHEET DESIGN --- */
         @page { size: A4; margin: 0; }
         .marksheet-page {
             width: 210mm; height: 296mm; padding: 25mm; margin: 0 auto;
@@ -33,15 +33,13 @@
             page-break-after: always; display: flex; flex-direction: column;
             border: 15px solid transparent;
             border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
-            
-            /* Full Page Scattered Watermark */
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><text y='25%' x='15%' fill='rgba(255,105,180,0.1)' font-size='14'>🌸</text><text y='55%' x='75%' fill='rgba(255,105,180,0.1)' font-size='14'>🦋</text><text y='85%' x='35%' fill='rgba(255,105,180,0.1)' font-size='14'>☀️</text><text y='15%' x='85%' fill='rgba(255,105,180,0.1)' font-size='14'>🌻</text></svg>");
             background-repeat: repeat;
             -webkit-print-color-adjust: exact !important;
         }
 
         .m-header { text-align: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; }
-        .m-logo { width: 100px; height: 100px; margin-bottom: 5px; }
+        .m-logo { width: 100px; height: 100px; margin-bottom: 5px; object-fit: contain; }
         .m-school-name { font-size: 34px; font-weight: 900; color: var(--green) !important; margin: 0; font-family: 'Times New Roman'; }
         .m-banner { background: #ffeb3b !important; color: #c62828 !important; padding: 8px 35px; border-radius: 50px; display: inline-block; font-size: 20px; font-weight: bold; border: 2px solid #c62828; margin: 12px 0; }
         
@@ -78,7 +76,7 @@
             <input type="date" id="rDOB">
             <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
             <input type="text" id="rSR" placeholder="SR Number (Optional)">
-            <button class="btn-action" onclick="registerStudent()">SAVE DATA</button>
+            <button class="btn-action" id="regBtn" onclick="registerStudent()">SAVE DATA</button>
         </div>
     </div>
 
@@ -102,7 +100,7 @@
                 <input type="number" id="m1" placeholder="Enter (0-50)">
                 <label>Annual (Max 50)</label>
                 <input type="number" id="m2" placeholder="Enter (0-50)">
-                <button class="btn-action" onclick="saveMarks()">UPDATE MARKS</button>
+                <button class="btn-action" id="markBtn" onclick="saveMarks()">UPDATE MARKS</button>
             </div>
         </div>
     </div>
@@ -119,11 +117,17 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbyCab2COguK8jw4bhzMeB5qS5mcqYT518vzrVV0DbkmLA38GQrUDhi8FmKW_ZnZEU1l/exec"; // APNA URL YAHAN DALEIN
+    const API = "https://script.google.com/macros/s/AKfycbyCab2COguK8jw4bhzMeB5qS5mcqYT518vzrVV0DbkmLA38GQrUDhi8FmKW_ZnZEU1l/exec"; 
     let MASTER = [];
 
+    // Sync function with loader indicator
     async function sync() {
-        try { const res = await fetch(API); MASTER = await res.json(); } catch(e) { console.error("Sync Error", e); }
+        console.log("Syncing data...");
+        try { 
+            const res = await fetch(API); 
+            MASTER = await res.json(); 
+            console.log("Data Synced. Total records:", MASTER.length);
+        } catch(e) { alert("Sync Failed! Check Internet."); }
     }
     sync();
 
@@ -132,6 +136,8 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).style.display = 'block';
         document.getElementById('btn-' + id).classList.add('active');
+        // Auto-refresh lists when switching tabs
+        if(id === 'teacher' || id === 'list' || id === 'admin') sync();
     }
 
     function resetMarksFields() {
@@ -139,7 +145,6 @@
         document.getElementById('m2').value = "";
     }
 
-    // LIST VIEW LOGIC
     function loadStudentList() {
         const cls = document.getElementById('lClass').value;
         if(!cls) return;
@@ -160,7 +165,7 @@
     async function updateStudent(idx) {
         const rowData = [document.getElementById('en'+idx).value, MASTER[idx][1], document.getElementById('ef'+idx).value, MASTER[idx][3], MASTER[idx][4], document.getElementById('ed'+idx).value];
         await fetch(API, { method:"POST", body: JSON.stringify({action:"editStudent", row: idx+1, data: rowData}) });
-        alert("Updated!"); sync();
+        alert("Updated!"); await sync(); loadStudentList();
     }
 
     function filterForMarks() {
@@ -176,12 +181,16 @@
         const sub = document.getElementById('tSub').value;
         const m1 = document.getElementById('m1').value;
         const m2 = document.getElementById('m2').value;
+        if(!idx) { alert("Please select student"); return; }
         if(m1 > 50 || m2 > 50) { alert("Max marks is 50"); return; }
         
+        document.getElementById('markBtn').innerText = "Saving...";
         let marks = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
         marks[sub] = [m1, m2];
         await fetch(API, { method:"POST", body: JSON.stringify({action:"updateMarks", row: parseInt(idx)+1, marks: JSON.stringify(marks)}) });
-        alert("Success!"); sync();
+        alert("Marks Updated!");
+        document.getElementById('markBtn').innerText = "UPDATE MARKS";
+        await sync();
     }
 
     function getStars(total) {
@@ -195,6 +204,7 @@
     function unlockPrint() {
         if(document.getElementById('adminPass').value === "admin123") {
             document.getElementById('print-area').style.display = 'block';
+            sync(); // Sync again to ensure latest marks are there
         } else { alert("Wrong Password!"); }
     }
 
@@ -215,7 +225,7 @@
                 html += `
                 <div class="marksheet-page">
                     <div class="m-header">
-                        <img src="logo.jpg" class="m-logo">
+                        <img src="logo.jpg" class="m-logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
                         <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="font-weight:bold; margin:0;">MANPUR BAHERI, BAREILLY (U.P.)</p>
                         <p style="font-weight:bold; margin:0;">Session: 2025-26</p>
@@ -236,6 +246,7 @@
                 </div>`;
             }
         });
+        if(!html) { alert("No students found in this class!"); return; }
         const w = window.open();
         w.document.write(`<html><head><style>${document.head.innerHTML}</style></head><body>${html}</body></html>`);
         w.document.close();
@@ -243,9 +254,14 @@
     }
 
     async function registerStudent() {
-        const data = [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
+        const name = document.getElementById('rName').value;
+        if(!name) { alert("Enter Name"); return; }
+        document.getElementById('regBtn').innerText = "Saving...";
+        const data = [name, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
         await fetch(API, { method:"POST", body: JSON.stringify({action:"registerStudent", data: data}) });
-        alert("Registered!"); sync();
+        alert("Registered!");
+        document.getElementById('regBtn').innerText = "SAVE DATA";
+        await sync();
     }
 </script>
 </body>
