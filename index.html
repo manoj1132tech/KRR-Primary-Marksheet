@@ -1,139 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>K.R.R. JUNIOR HIGH SCHOOL - Premium Portal</title>
+    <title>K.R.R. JUNIOR HIGH SCHOOL - Portal</title>
     <style>
-        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --green: #2e7d32; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
-        .nav-bar { background: var(--blue); padding: 15px; text-align: center; color: white; position: sticky; top:0; z-index: 1000; }
-        .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 18px; cursor: pointer; border-radius: 5px; margin: 5px; font-weight: bold; }
-        .nav-btn.active { background: var(--red); }
-        .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; }
+        .no-print { background: var(--blue); padding: 15px; text-align: center; color: white; }
+        .nav-btn { background: none; border: 1px solid white; color: white; padding: 8px 15px; cursor: pointer; margin: 5px; border-radius: 4px; font-weight: bold; }
+        .nav-btn.active { background: var(--red); border-color: var(--red); }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .section { display: none; }
         .section.active { display: block; }
-        .btn-action { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top:10px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-action { background: #28a745; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; font-size: 16px; border-radius: 5px; }
 
-        /* --- MARKSHEET DESIGN --- */
+        /* --- MARKSHEET PREMIUM DESIGN --- */
         @page { size: A4; margin: 0; }
         .marksheet-page {
-            width: 210mm; height: 296mm; padding: 18mm; margin: 0 auto;
+            width: 210mm; height: 296mm; padding: 15mm; margin: 0 auto;
             background: #fff !important; position: relative; box-sizing: border-box;
-            page-break-after: always; display: flex; flex-direction: column;
-            
-            /* Border & Corner Design */
-            border: 20px solid transparent;
+            page-break-after: always;
+            border: 18px solid transparent;
             border-image: url('https://www.transparenttextures.com/patterns/gold-scale.png') 30 stretch;
-            outline: 2px solid var(--gold); outline-offset: -14px;
-
-            /* WATERMARK: Scattered Sunflower & Butterfly (Opacity 0.20) */
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><text y='30%' x='20%' fill='rgba(0,0,0,0.12)' font-size='14'>🌻</text><text y='60%' x='70%' fill='rgba(0,0,0,0.12)' font-size='14'>🦋</text><text y='85%' x='35%' fill='rgba(0,0,0,0.12)' font-size='14'>🌻</text></svg>");
+            outline: 2px solid var(--gold); outline-offset: -12px;
+            
+            /* SCATTERED WATERMARK 0.50 OPACITY */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 100 100'><text y='30%' x='10%' fill='rgba(0,0,0,0.05)' font-size='12'>🌻</text><text y='60%' x='70%' fill='rgba(0,0,0,0.05)' font-size='12'>🦋</text><text y='90%' x='35%' fill='rgba(0,0,0,0.05)' font-size='12'>🌻</text></svg>");
             background-repeat: repeat;
-            -webkit-print-color-adjust: exact !important;
         }
 
-        /* Logo Left & School Name Red */
-        .m-header { display: flex; align-items: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; margin-bottom: 15px; }
-        .m-logo { width: 110px; height: 110px; margin-right: 20px; }
-        .m-school-name { font-size: 34px; font-weight: 900; color: var(--red) !important; margin: 0; font-family: 'Georgia', serif; }
+        .m-header { display: flex; align-items: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; margin-bottom: 10px; }
+        .m-logo { width: 100px; height: 100px; object-fit: contain; margin-right: 20px; }
+        .m-school-info { flex: 1; text-align: left; }
+        .m-school-name { font-size: 30px; font-weight: 900; color: var(--red) !important; margin: 0; font-family: 'Georgia', serif; }
+        .m-address { font-size: 14px; font-weight: bold; color: var(--blue); margin: 0; }
         
-        .m-info-table { width: 100%; margin-bottom: 20px; font-size: 16px; border-collapse: collapse; }
-        .m-info-table td { padding: 8px 5px; border-bottom: 1px dashed #bbb; }
+        .m-banner { background: var(--red) !important; color: white !important; padding: 5px 25px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 18px; margin: 10px 0; border: 2px solid var(--gold); }
+
+        .m-info-table { width: 100%; margin-bottom: 15px; font-size: 16px; border-collapse: collapse; }
+        .m-info-table td { padding: 6px 0; border-bottom: 1px dashed #ccc; }
+        .m-info-table b { color: var(--blue); }
 
         .m-marks-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
-        .m-marks-table th, .m-marks-table td { border: 1.5px solid #000; padding: 10px; text-align: center; font-weight: bold; }
-        .m-marks-table th { background: #f2f2f2 !important; }
+        .m-marks-table th, .m-marks-table td { border: 1.5px solid #000; padding: 8px; text-align: center; font-weight: bold; }
+        .m-marks-table th { background: #f2f2f2 !important; font-size: 14px; }
         
-        /* Colored Total Marks */
-        .total-col { color: #1a237e !important; font-size: 18px; }
-
-        /* Result Rounded Box */
-        .result-container { 
-            margin-top: 20px; display: flex; justify-content: space-between; 
-            border: 2px solid var(--blue); border-radius: 15px; padding: 12px;
-            background: rgba(26, 35, 126, 0.05) !important;
+        /* ROUNDED RESULT BOX */
+        .result-box { 
+            margin-top: 20px; border-radius: 15px; border: 2.5px solid var(--blue);
+            display: flex; background: #e8eaf6 !important; padding: 12px; text-align: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
-        .res-box { text-align: center; flex: 1; font-size: 16px; }
-        .res-box b { color: var(--red); font-size: 18px; }
+        .res-item { flex: 1; color: var(--blue); font-size: 17px; font-weight: 900; }
+        .res-item span { color: var(--red); }
 
-        .extra-info { margin-top: 20px; font-size: 16px; line-height: 1.8; }
-        .extra-info b { border-bottom: 1px solid #000; padding-right: 20px; }
+        .footer-line { margin-top: 15px; border-bottom: 1px solid #000; padding: 5px 0; font-size: 15px; font-weight: bold; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 20px; }
+        .sig-box { border-top: 2px solid #000; width: 150px; text-align: center; font-size: 13px; font-weight: bold; padding-top: 5px; }
 
-        .m-sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 20px; }
-        .m-sig-box { border-top: 2px solid #000; width: 160px; text-align: center; font-weight: bold; padding-top: 5px; }
-        
-        @media print { .no-print { display: none !important; } }
+        @media print { .no-print-area { display: none !important; } }
     </style>
 </head>
 <body>
 
-<div class="nav-bar no-print">
-    <h2 style="margin:0;">K.R.R. JUNIOR HIGH SCHOOL PORTAL</h2>
+<div class="no-print-area no-print">
+    <h2 style="margin:5px 0;">K.R.R. JUNIOR HIGH SCHOOL - PORTAL</h2>
     <button class="nav-btn active" onclick="showTab('reg')">ADMISSION</button>
+    <button class="nav-btn" onclick="showTab('list')">EDIT STUDENT</button>
     <button class="nav-btn" onclick="showTab('teacher')">MARKS ENTRY</button>
-    <button class="nav-btn" onclick="showTab('admin')">PRINT REPORT</button>
+    <button class="nav-btn" onclick="showTab('admin')">PRINT PANEL</button>
 </div>
 
-<div class="container no-print">
+<div class="container no-print-area">
     <div id="reg" class="section active">
-        <h3>Student Admission</h3>
-        <input type="text" id="rName" placeholder="Student Name">
-        <input type="text" id="rFather" placeholder="Father's Name">
-        <input type="text" id="rMother" placeholder="Mother's Name">
+        <h3>New Registration (Auto-Uppercase)</h3>
+        <input type="text" id="rName" placeholder="STUDENT NAME">
+        <input type="text" id="rFather" placeholder="FATHER'S NAME">
+        <input type="text" id="rMother" placeholder="MOTHER'S NAME">
         <input type="date" id="rDOB">
-        <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>VI</option><option>VII</option><option>VIII</option></select>
-        <input type="text" id="rSR" placeholder="SR Number (Leave blank if none)">
-        <button class="btn-action" onclick="register()">SAVE ADMISSION</button>
+        <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+        <input type="text" id="rSR" placeholder="SR NUMBER">
+        <button class="btn-action" onclick="saveData('registerStudent')">SAVE ADMISSION</button>
+    </div>
+
+    <div id="list" class="section">
+        <h3>Class Wise Edit</h3>
+        <select id="lClass" onchange="loadList()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+        <div id="listView"></div>
     </div>
 
     <div id="teacher" class="section">
-        <h3>Subject Marks Entry</h3>
-        <select id="tClass" onchange="filterStudents()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-        <div id="mArea" style="display:none; margin-top:15px;">
+        <h3>Marks Entry (Limit: 50)</h3>
+        <select id="tClass" onchange="filterMarks()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+        <div id="mInput" style="display:none;">
             <select id="tStudent"></select>
-            <select id="tSub"><option>HINDI</option><option>ENGLISH</option><option>MATHS</option><option>SCIENCE</option><option>SANSKRIT</option><option>GK</option><option>DRAWING</option></select>
-            <input type="number" id="m1" placeholder="Half Yearly (50)">
-            <input type="number" id="m2" placeholder="Annual (50)">
+            <select id="tSub">
+                <option>HINDI WRITTEN</option><option>HINDI ORAL</option>
+                <option>ENGLISH WRITTEN</option><option>ENGLISH ORAL</option>
+                <option>MATH WRITTEN</option><option>MATH ORAL</option>
+                <option>STORY TELLING</option><option>PHYSICAL ACTIVITY</option>
+            </select>
+            <input type="number" id="m1" placeholder="Half Yearly (0-50)" max="50" oninput="if(value>50)value=50">
+            <input type="number" id="m2" placeholder="Annual (0-50)" max="50" oninput="if(value>50)value=50">
             <button class="btn-action" onclick="saveMarks()">UPDATE MARKS</button>
         </div>
     </div>
 
     <div id="admin" class="section">
-        <h3>Print Report Cards</h3>
-        <select id="pClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-        <button class="btn-action" style="background:var(--red);" onclick="generate()">GENERATE ALL</button>
+        <input type="password" id="pass" placeholder="Password (Default: 123)">
+        <button class="btn-action" onclick="if(document.getElementById('pass').value=='123')document.getElementById('pArea').style.display='block'">UNLOCK PRINT</button>
+        <div id="pArea" style="display:none; margin-top:20px;">
+            <select id="pClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+            <button class="btn-action" style="background:var(--red);" onclick="generate()">GENERATE ALL MARKSHEETS</button>
+        </div>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbwogOO6sN9lwgSeVrewCQmB7ywAtSEpxXe_KbL2N7KVAqOI8nyHeCzVEjiz_q0j-UXcFQ/exec"; // Naya URL yahan daalein
+    const API = "https://script.google.com/macros/s/AKfycbxJg2qtc8seNb6032pl3Y3pahwyKc24B-0a5Bh2BtbZyioJOR11ySkavPfyTv2wyd6MpQ/exec"; // Naya URL yahan paste karein
     let MASTER = [];
 
-    async function sync() {
-        const res = await fetch(API);
-        MASTER = await res.json();
-    }
+    async function sync() { const res = await fetch(API); MASTER = await res.json(); }
     sync();
 
     function showTab(id) {
-        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
         sync();
     }
 
-    async function register() {
-        const data = [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"registerStudent", data: data}) });
-        alert("Data Saved in UpperCase!");
-        sync();
+    async function saveData(action, idx = -1) {
+        let data = action==='registerStudent' ? 
+            [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")] :
+            [document.getElementById('eN'+idx).value, document.getElementById('eM'+idx).value, document.getElementById('eF'+idx).value, MASTER[idx][3], document.getElementById('eS'+idx).value, document.getElementById('eD'+idx).value];
+        
+        await fetch(API, { method:"POST", body: JSON.stringify({action: action, row: idx+1, data: data}) });
+        alert("Success!"); sync();
     }
 
-    function filterStudents() {
-        const cls = document.getElementById('tClass').value;
-        const sel = document.getElementById('tStudent');
-        sel.innerHTML = '<option value="">-- Choose Student --</option>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3] == cls) sel.add(new Option(r[0], i)); });
-        document.getElementById('mArea').style.display='block';
+    function loadList() {
+        const cls = document.getElementById('lClass').value;
+        let h = '<table border="1" style="width:100%; border-collapse:collapse;">';
+        MASTER.forEach((r, i) => {
+            if(i>0 && r[3]==cls) h += `<tr><td><input id="eN${i}" value="${r[0]}"></td><td><input id="eF${i}" value="${r[2]}"></td><td><button onclick="saveData('editStudent',${i})">Save</button></td></tr>`;
+        });
+        document.getElementById('listView').innerHTML = h+'</table>';
+    }
+
+    function filterMarks() {
+        const sel = document.getElementById('tStudent'); sel.innerHTML = '<option>-- Select --</option>';
+        MASTER.forEach((r, i) => { if(i>0 && r[3]==document.getElementById('tClass').value) sel.add(new Option(r[0], i)); });
+        document.getElementById('mInput').style.display='block';
     }
 
     async function saveMarks() {
@@ -141,14 +159,11 @@
         let m = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
         m[document.getElementById('tSub').value] = [document.getElementById('m1').value, document.getElementById('m2').value];
         await fetch(API, { method:"POST", body: JSON.stringify({action:"updateMarks", row: parseInt(idx)+1, marks: JSON.stringify(m)}) });
-        alert("Marks Updated!");
-        sync();
+        alert("Marks Saved!"); sync();
     }
 
-    function getNextClass(curr) {
-        const list = ["NC","LKG","UKG","I","II","III","IV","V","VI","VII","VIII"];
-        let i = list.indexOf(curr);
-        return (i !== -1 && i < list.length -1) ? list[i+1] : "HIGHER CLASS";
+    function getGrade(t) {
+        if(t >= 90) return "A+ ⭐⭐⭐"; if(t >= 75) return "A ⭐⭐"; if(t >= 60) return "B ⭐"; if(t >= 40) return "C"; return "D";
     }
 
     function generate() {
@@ -157,52 +172,47 @@
         MASTER.forEach((r, i) => {
             if(i > 0 && r[3] == cls) {
                 let marks = r[6] ? JSON.parse(r[6]) : {};
-                let subs = ["HINDI", "ENGLISH", "MATHS", "SCIENCE", "SANSKRIT", "GK", "DRAWING"];
+                let subs = ["HINDI WRITTEN", "HINDI ORAL", "ENGLISH WRITTEN", "ENGLISH ORAL", "MATH WRITTEN", "MATH ORAL", "STORY TELLING", "PHYSICAL ACTIVITY"];
                 let rows = ''; let total = 0;
-                
                 subs.forEach(s => {
                     let m = marks[s] || ["", ""];
                     let t = (parseInt(m[0])||0) + (parseInt(m[1])||0);
                     total += t;
-                    rows += `<tr><td>${s}</td><td>${m[0]}</td><td>${m[1]}</td><td class="total-col">${t}</td></tr>`;
+                    rows += `<tr><td>${s}</td><td>${m[0]}</td><td>${m[1]}</td><td style="color:var(--blue)">${t}</td><td>${getGrade(t)}</td></tr>`;
                 });
-
-                let perc = (total / subs.length).toFixed(1);
-                let srCell = r[4] ? `<td>SR NO: <b>${r[4]}</b></td>` : `<td></td>`;
-                let remark = perc >= 80 ? "EXCELLENT" : perc >= 60 ? "VERY GOOD" : "GOOD";
+                let perc = (total / 4).toFixed(1);
+                let srLine = r[4] ? `<td>SR NO: <b>${r[4]}</b></td>` : `<td></td>`;
 
                 html += `
                 <div class="marksheet-page">
                     <div class="m-header">
                         <img src="logo.jpg" class="m-logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
-                        <div class="m-info">
+                        <div class="m-school-info">
                             <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:0; font-weight:bold;">MANPUR BAHERI, BAREILLY (U.P.)</p>
+                            <p class="m-address">MANPUR BAHERI, BAREILLY | SESSION: 2025-26</p>
                         </div>
                     </div>
                     <center><div class="m-banner">ANNUAL PROGRESS REPORT</div></center>
                     <table class="m-info-table">
-                        <tr><td>NAME: <b>${r[0]}</b></td>${srCell}</tr>
+                        <tr><td>NAME: <b>${r[0]}</b></td>${srLine}</tr>
                         <tr><td>FATHER: <b>${r[2]}</b></td><td>CLASS: <b>${r[3]}</b></td></tr>
                         <tr><td>MOTHER: <b>${r[1]}</b></td><td>DOB: <b>${r[5]}</b></td></tr>
                     </table>
                     <table class="m-marks-table">
-                        <thead><tr><th>SUBJECT NAME</th><th>H.Y.(50)</th><th>ANNUAL(50)</th><th>TOTAL</th></tr></thead>
+                        <thead><tr><th>SUBJECT</th><th>HY(50)</th><th>ANN(50)</th><th>TOTAL</th><th>GRADE</th></tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div class="result-container">
-                        <div class="res-box">TOTAL: <b>${total}</b></div>
-                        <div class="res-box">PERCENTAGE: <b>${perc}%</b></div>
-                        <div class="res-box">RESULT: <b>${perc>=33?'PASS':'FAIL'}</b></div>
+                    <div class="result-box">
+                        <div class="res-item">TOTAL: <span>${total}/400</span></div>
+                        <div class="res-item">PERCENTAGE: <span>${perc}%</span></div>
+                        <div class="res-item">STATUS: <span>${perc>=33?'PASS':'FAIL'}</span></div>
                     </div>
-                    <div class="extra-info">
-                        <div>TEACHER REMARKS: <b>${remark}</b></div>
-                        <div>CLASS PROMOTION: <b>PROMOTED TO CLASS ${getNextClass(r[3])}</b></div>
-                    </div>
-                    <div class="m-sig-row">
-                        <div class="m-sig-box">PARENT'S SIGN</div>
-                        <div class="m-sig-box">CLASS TEACHER</div>
-                        <div class="m-sig-box">PRINCIPAL</div>
+                    <div class="footer-line">TEACHER'S REMARKS: ${perc>=80?'EXCELLENT':perc>=60?'GOOD':'AVERAGE'}</div>
+                    <div class="footer-line">PROMOTION: PROMOTED TO CLASS ${cls==='V'?'VI':(cls==='UKG'?'I':'NEXT CLASS')}</div>
+                    <div class="sig-row">
+                        <div class="sig-box">PARENT'S SIGN</div>
+                        <div class="sig-box">CLASS TEACHER</div>
+                        <div class="sig-box">PRINCIPAL SIGN</div>
                     </div>
                 </div>`;
             }
