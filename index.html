@@ -1,229 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>K.R.R. JUNIOR HIGH SCHOOL - Portal</title>
+    <title>K.R.R. School Portal - New System</title>
     <style>
-        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; }
-        .no-print { background: var(--blue); padding: 15px; text-align: center; color: white; }
-        .nav-btn { background: none; border: 1px solid white; color: white; padding: 8px 15px; cursor: pointer; margin: 5px; border-radius: 4px; font-weight: bold; }
+        :root { --blue: #1a237e; --red: #b71c1c; --gold: #8c6d05; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; }
+        .nav-header { background: var(--blue); padding: 15px; text-align: center; color: white; }
+        .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 8px 15px; cursor: pointer; margin: 5px; border-radius: 5px; }
         .nav-btn.active { background: var(--red); border-color: var(--red); }
-        .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 800px; margin: 25px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .section { display: none; }
         .section.active { display: block; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-action { background: #28a745; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; font-size: 16px; border-radius: 5px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .btn-action { background: #2e7d32; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 6px; }
 
-        /* --- MARKSHEET PREMIUM DESIGN --- */
+        /* Marksheet CSS */
         @page { size: A4; margin: 0; }
-        .marksheet-page {
-            width: 210mm; height: 296mm; padding: 12mm; margin: 0 auto;
-            background: #fff !important; position: relative; box-sizing: border-box;
-            page-break-after: always;
-            border: 18px solid transparent;
-            border-image: url('https://www.transparenttextures.com/patterns/gold-scale.png') 30 stretch;
-            outline: 2px solid var(--gold); outline-offset: -12px;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 100 100'><text y='30%' x='10%' fill='rgba(0,0,0,0.05)' font-size='12'>🌻</text><text y='60%' x='70%' fill='rgba(0,0,0,0.05)' font-size='12'>🦋</text><text y='90%' x='35%' fill='rgba(0,0,0,0.05)' font-size='12'>🌻</text></svg>");
-            background-repeat: repeat;
-        }
-
-        .m-header { display: flex; align-items: center; border-bottom: 3px double var(--gold); padding-bottom: 8px; margin-bottom: 5px; }
-        .m-logo { width: 90px; height: 90px; object-fit: contain; margin-right: 20px; }
-        .m-school-info { flex: 1; text-align: left; }
-        .m-school-name { font-size: 28px; font-weight: 900; color: var(--red) !important; margin: 0; font-family: 'Georgia', serif; }
-        .m-address { font-size: 13px; font-weight: bold; color: var(--blue); margin: 0; }
-        
-        .m-banner { background: var(--red) !important; color: white !important; padding: 4px 20px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 16px; margin: 8px 0; border: 2px solid var(--gold); }
-
-        .m-info-table { width: 100%; margin-bottom: 10px; font-size: 15px; border-collapse: collapse; }
-        .m-info-table td { padding: 4px 0; border-bottom: 1px dashed #ccc; }
-
-        .m-marks-table { width: 100%; border-collapse: collapse; border: 2.5px solid #000; font-size: 13px; }
-        .m-marks-table th, .m-marks-table td { border: 1.5px solid #000; padding: 6px; text-align: center; font-weight: bold; }
-        .m-marks-table th { background: #f2f2f2 !important; }
-        
-        .result-box { 
-            margin-top: 12px; border-radius: 12px; border: 2.5px solid var(--blue);
-            display: flex; background: #e8eaf6 !important; padding: 10px; text-align: center;
-        }
-        .res-item { flex: 1; color: var(--blue); font-size: 16px; font-weight: 900; }
-        .res-item span { color: var(--red); }
-
-        .footer-line { margin-top: 8px; border-bottom: 1.5px solid #000; padding: 3px 0; font-size: 14px; font-weight: bold; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 20px; }
-        .sig-box { border-top: 2px solid #000; width: 140px; text-align: center; font-size: 12px; font-weight: bold; padding-top: 5px; }
-
-        @media print { .no-print-area { display: none !important; } }
+        .marksheet-page { width: 210mm; height: 296mm; padding: 20mm; margin: 0 auto; background: #fff; position: relative; box-sizing: border-box; page-break-after: always; border: 15px solid transparent; border-image: url('https://www.transparenttextures.com/patterns/gold-scale.png') 30 stretch; outline: 2px solid var(--gold); outline-offset: -10px; }
+        .m-header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        .m-school-name { font-size: 30px; font-weight: 900; color: var(--red); margin: 0; font-family: 'Georgia', serif; }
+        .m-banner { background: var(--red); color: white; padding: 5px 25px; border-radius: 50px; display: inline-block; font-weight: bold; margin: 15px 0; }
+        .m-info-table { width: 100%; margin: 20px 0; font-size: 16px; border-collapse: collapse; }
+        .m-info-table td { padding: 8px 5px; border-bottom: 1px dashed #ccc; }
+        .m-marks-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
+        .m-marks-table th, .m-marks-table td { border: 1.5px solid #000; padding: 10px; text-align: center; font-weight: bold; }
+        .result-box { margin-top: 20px; border: 2px solid var(--blue); display: flex; background: #f1f3f9; padding: 15px; }
+        .res-item { flex: 1; text-align: center; color: var(--blue); font-size: 18px; font-weight: 900; }
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body>
 
-<div class="no-print-area no-print">
-    <h2 style="margin:5px 0;">K.R.R. JUNIOR HIGH SCHOOL - PORTAL</h2>
-    <button class="nav-btn active" onclick="showTab('reg')">ADMISSION</button>
-    <button class="nav-btn" onclick="showTab('list')">EDIT STUDENT</button>
-    <button class="nav-btn" onclick="showTab('teacher')">MARKS ENTRY</button>
-    <button class="nav-btn" onclick="showTab('admin')">PRINT PANEL</button>
+<div class="nav-header no-print">
+    <h2>K.R.R. JUNIOR HIGH SCHOOL - PORTAL</h2>
+    <button class="nav-btn" onclick="showTab('reg')">ADMISSION</button>
+    <button class="nav-btn active" onclick="showTab('teacher')">MARKS & GRADE ENTRY</button>
+    <button class="nav-btn" onclick="showTab('admin')">PRINT REPORT</button>
 </div>
 
-<div class="container no-print-area">
-    <div id="teacher" class="section">
-        <h3>Marks Entry (Total Target: 1400)</h3>
-        <select id="tClass" onchange="filterMarks()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-        <div id="mInput" style="display:none;">
-            <select id="tStudent" onchange="resetMarksFields()"></select>
-            <label>Select Subject:</label>
-            <select id="tSub" onchange="resetMarksFields()">
-                <optgroup label="Written/Oral (Max 100 Total)">
-                    <option>HINDI</option><option>ENGLISH</option><option>MATHS</option>
-                    <option>SCIENCE</option><option>S.ST</option><option>G.K.</option>
-                    <option>SANSKRIT</option><option>COMPUTER</option><option>DRAWING</option>
-                </optgroup>
-                <optgroup label="Activity Based (Grading)">
-                    <option>PHYSICAL ACTIVITY</option><option>STORY TELLING</option>
-                    <option>DISCIPLINE</option><option>CLEANLINESS</option>
-                </optgroup>
+<div class="container no-print">
+    <div id="teacher" class="section active">
+        <h3>Teacher Panel: Enter Marks/Grades</h3>
+        <select id="tClass" onchange="filterStudents()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option></select>
+        
+        <div id="mInput" style="display:none; margin-top:15px;">
+            <select id="tStudent"></select>
+            <select id="tSub" onchange="toggleInputType()">
+                <option value="HINDI">HINDI (ORAL + WRITTEN)</option>
+                <option value="MATHS">MATHS (ORAL + WRITTEN)</option>
+                <option value="ENGLISH">ENGLISH (ORAL + WRITTEN)</option>
+                <option value="STORY">STORY TELLING (GRADE ONLY)</option>
+                <option value="PHYSICAL">PHYSICAL ACTIVITY (GRADE ONLY)</option>
             </select>
-            <input type="number" id="m1" placeholder="Half Yearly (Max 50)" max="50" oninput="if(value>50)value=50">
-            <input type="number" id="m2" placeholder="Annual (Max 50)" max="50" oninput="if(value>50)value=50">
-            <button class="btn-action" onclick="saveMarks()">UPDATE MARKS</button>
+
+            <div id="scoreFields">
+                <input type="number" id="mOral" placeholder="Oral Marks (Max 20)">
+                <input type="number" id="mWritten" placeholder="Written Marks (Max 80)">
+            </div>
+
+            <div id="gradeFields" style="display:none;">
+                <select id="mGrade">
+                    <option value="">-- Select Grade --</option>
+                    <option value="A+">A+</option><option value="A">A</option>
+                    <option value="B">B</option><option value="C">C</option>
+                </select>
+            </div>
+
+            <button class="btn-action" onclick="saveData()">SAVE ENTRY</button>
         </div>
     </div>
     
-    <div id="reg" class="section active">
-        <h3>New Admission</h3>
-        <input type="text" id="rName" placeholder="STUDENT NAME">
-        <input type="text" id="rFather" placeholder="FATHER'S NAME">
-        <input type="text" id="rMother" placeholder="MOTHER'S NAME">
-        <input type="date" id="rDOB">
-        <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-        <input type="text" id="rSR" placeholder="SR NUMBER">
-        <button class="btn-action" onclick="saveData('registerStudent')">SAVE DATA</button>
-    </div>
-
     <div id="admin" class="section">
-        <input type="password" id="pass" placeholder="Admin Password">
-        <button class="btn-action" onclick="if(document.getElementById('pass').value=='admin123')document.getElementById('pArea').style.display='block'; else alert('Wrong Password');">UNLOCK</button>
-        <div id="pArea" style="display:none;">
-            <select id="pClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-            <button class="btn-action" style="background:var(--red);" onclick="generate()">GENERATE 1400 MARKSHEETS</button>
-        </div>
+        <h3>Print Panel</h3>
+        <button class="btn-action" style="background:var(--red);" onclick="generateReport()">GENERATE ALL MARKSHEETS</button>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbxJg2qtc8seNb6032pl3Y3pahwyKc24B-0a5Bh2BtbZyioJOR11ySkavPfyTv2wyd6MpQ/exec"; 
-    let MASTER = [];
-
-    async function sync() { const res = await fetch(API); MASTER = await res.json(); }
-    sync();
-
     function showTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        sync();
     }
 
-    function resetMarksFields() {
-        document.getElementById('m1').value = "";
-        document.getElementById('m2').value = "";
+    function toggleInputType() {
+        const sub = document.getElementById('tSub').value;
+        if(sub === 'STORY' || sub === 'PHYSICAL') {
+            document.getElementById('scoreFields').style.display = 'none';
+            document.getElementById('gradeFields').style.display = 'block';
+        } else {
+            document.getElementById('scoreFields').style.display = 'block';
+            document.getElementById('gradeFields').style.display = 'none';
+        }
     }
 
-    function filterMarks() {
-        const sel = document.getElementById('tStudent'); sel.innerHTML = '<option value="">-- Select --</option>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3]==document.getElementById('tClass').value) sel.add(new Option(r[0], i)); });
-        document.getElementById('mInput').style.display='block';
+    function filterStudents() {
+        // Yahan database se student list aayegi
+        document.getElementById('tStudent').innerHTML = '<option>Example Student</option>';
+        document.getElementById('mInput').style.display = 'block';
     }
 
-    async function saveMarks() {
-        const idx = document.getElementById('tStudent').value;
-        if(!idx) return alert("Select Student");
-        let m = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
-        m[document.getElementById('tSub').value] = [document.getElementById('m1').value, document.getElementById('m2').value];
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"updateMarks", row: parseInt(idx)+1, marks: JSON.stringify(m)}) });
-        alert("Success!"); sync();
-    }
+    // Marksheet Logic
+    function generateReport() {
+        let subjects = [
+            {n: "HINDI (ORAL+WRITTEN)", m: "85", g: "A"},
+            {n: "MATHS (ORAL+WRITTEN)", m: "90", g: "A+"},
+            {n: "ENGLISH (ORAL+WRITTEN)", m: "78", g: "B"},
+            {n: "STORY TELLING", m: "-", g: "A"}, // Grade Entry
+            {n: "PHYSICAL ACTIVITY", m: "-", g: "A+"} // Grade Entry
+        ];
 
-    // --- GRADING LOGIC FOR ACTIVITY ---
-    function getActivityGrade(score) {
-        if(score >= 80) return "A+";
-        if(score >= 60) return "A";
-        if(score >= 40) return "B";
-        return "C";
-    }
-
-    function getExamGrade(t) {
-        if(t >= 90) return "A+"; if(t >= 75) return "A"; if(t >= 60) return "B"; return "C";
-    }
-
-    function generate() {
-        const cls = document.getElementById('pClass').value;
-        let html = '';
-        MASTER.forEach((r, i) => {
-            if(i > 0 && r[3] == cls) {
-                let marks = r[6] ? JSON.parse(r[6]) : {};
-                // Total 14 Subjects for 1400 Marks
-                let subjects = ["HINDI", "ENGLISH", "MATHS", "SCIENCE", "S.ST", "G.K.", "SANSKRIT", "COMPUTER", "DRAWING", "PHYSICAL ACTIVITY", "STORY TELLING", "DISCIPLINE", "CLEANLINESS"];
-                
-                let rows = ''; let total = 0;
-                subjects.forEach(s => {
-                    let m = marks[s] || ["", ""];
-                    let t = (parseInt(m[0])||0) + (parseInt(m[1])||0);
-                    total += t;
-                    
-                    let displayGrade = "";
-                    // Agar Activity subject hai toh grade dikhao marks nahi
-                    if(["PHYSICAL ACTIVITY", "STORY TELLING", "DISCIPLINE", "CLEANLINESS"].includes(s)) {
-                        displayGrade = getActivityGrade(t);
-                        rows += `<tr><td>${s}</td><td colspan="2">ACTIVITY BASED</td><td>-</td><td style="color:var(--red)">${displayGrade}</td></tr>`;
-                    } else {
-                        displayGrade = getExamGrade(t);
-                        rows += `<tr><td>${s}</td><td>${m[0]}</td><td>${m[1]}</td><td>${t}</td><td>${displayGrade}</td></tr>`;
-                    }
-                });
-
-                let perc = (total / 14).toFixed(1);
-
-                html += `
-                <div class="marksheet-page">
-                    <div class="m-header">
-                        <img src="logo.jpg" class="m-logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
-                        <div class="m-school-info">
-                            <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p class="m-address">MANPUR BAHERI, BAREILLY (U.P.)</p>
-                            <p class="m-address" style="color:var(--red)">SESSION: 2025-26</p>
-                        </div>
-                    </div>
-                    <center><div class="m-banner">ANNUAL PROGRESS REPORT</div></center>
-                    <table class="m-info-table">
-                        <tr><td>NAME: <b>${r[0]}</b></td><td>SR NO: <b>${r[4]||''}</b></td></tr>
-                        <tr><td>FATHER: <b>${r[2]}</b></td><td>CLASS: <b>${r[3]}</b></td></tr>
-                        <tr><td>MOTHER: <b>${r[1]}</b></td><td>DOB: <b>${r[5]}</b></td></tr>
-                    </table>
-                    <table class="m-marks-table">
-                        <thead><tr><th>SUBJECT NAME</th><th>HY(50)</th><th>ANN(50)</th><th>TOTAL</th><th>GRADE</th></tr></thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                    <div class="result-box">
-                        <div class="res-item">GRAND TOTAL: <span>${total}/1400</span></div>
-                        <div class="res-item">PERCENTAGE: <span>${perc}%</span></div>
-                        <div class="res-item">RESULT: <span>${perc>=33?'PASSED':'FAILED'}</span></div>
-                    </div>
-                    <div class="footer-line">REMARKS: ${perc>=80?'OUTSTANDING PERFORMANCE':perc>=60?'VERY GOOD':'CAN DO BETTER'}</div>
-                    <div class="footer-line">PROMOTION: PROMOTED TO NEXT HIGHER CLASS.</div>
-                    <div class="sig-row">
-                        <div class="sig-box">PARENT'S SIGN</div>
-                        <div class="sig-box">CLASS TEACHER</div>
-                        <div class="sig-box">PRINCIPAL SIGN</div>
-                    </div>
-                </div>`;
-            }
+        let rows = '';
+        subjects.forEach(s => {
+            rows += `<tr><td>${s.n}</td><td>${s.m}</td><td>${s.g}</td></tr>`;
         });
+
+        let html = `
+        <div class="marksheet-page">
+            <div class="m-header">
+                <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                <p>MANPUR BAHERI, BAREILLY | SESSION 2025-26</p>
+                <div class="m-banner">ANNUAL PROGRESS REPORT</div>
+            </div>
+            <table class="m-info-table">
+                <tr><td>NAME: <b>ARJUN KUMAR</b></td><td>CLASS: <b>NC</b></td></tr>
+            </table>
+            <table class="m-marks-table">
+                <thead><tr><th>SUBJECT</th><th>MARKS (100)</th><th>GRADE</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+            <div class="result-box">
+                <div class="res-item">RESULT: PASSED</div>
+            </div>
+        </div>`;
+        
         const w = window.open();
         w.document.write(`<html><head><style>${document.head.innerHTML}</style></head><body>${html}</body></html>`);
         w.document.close();
-        setTimeout(() => w.print(), 1000);
     }
 </script>
 </body>
