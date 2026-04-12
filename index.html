@@ -3,52 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K.R.R. JUNIOR HIGH SCHOOL - Admin Panel</title>
+    <title>K.R.R. ADVANCED PORTAL 2026</title>
     <style>
-        :root { --blue: #0d47a1; --red: #b71c1c; --gold: #fbc02d; --green: #1b5e20; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eceff1; margin: 0; }
+        :root { --p-blue: #0288d1; --p-red: #d32f2f; --p-green: #2e7d32; --p-gold: #ffa000; }
+        body { font-family: 'Segoe UI', Arial; background: #f4f7f6; margin: 0; }
         
-        .nav-bar { background: var(--blue); padding: 15px; text-align: center; color: white; position: sticky; top:0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 18px; cursor: pointer; border-radius: 5px; margin: 5px; font-weight: bold; transition: 0.3s; }
-        .nav-btn.active { background: var(--red); border-color: var(--red); }
+        /* Navigation */
+        .nav-bar { background: #1a237e; padding: 15px; text-align: center; color: white; position: sticky; top:0; z-index: 1000; }
+        .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin: 5px; font-weight: bold; }
+        .nav-btn.active { background: var(--p-red); }
 
-        .container { max-width: 1000px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        .container { max-width: 1100px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .section { display: none; }
         .section.active { display: block; }
 
-        .step-box { margin-bottom: 20px; padding: 20px; border-radius: 10px; border: 1px solid #ddd; background: #fafafa; }
-        label { font-weight: bold; display: block; margin-top: 10px; color: #333; font-size: 13px; }
-        select, input, textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; box-sizing: border-box; margin-bottom: 10px; }
-        .btn-action { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        
-        /* List Table Styling */
-        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        .list-table th, .list-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .list-table th { background: var(--blue); color: white; }
-        .btn-edit { background: var(--gold); border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* Form Styles */
+        .step-box { background: #f9f9f9; padding: 20px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+        .btn-save { background: var(--p-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* --- PRINT DESIGN --- */
+        /* List Table */
+        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .list-table th { background: var(--p-blue); color: white; padding: 12px; }
+        .list-table td { border: 1px solid #ddd; padding: 10px; }
+        .edit-row { background: #fffde7; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid var(--p-gold); }
+
+        /* --- PRINTABLE MARKSHEET (A4) --- */
         @page { size: A4; margin: 0; }
         .marksheet-page {
             width: 210mm; height: 297mm; padding: 15mm; margin: 0 auto;
-            background: #fff !important; position: relative; box-sizing: border-box;
+            background: #fff; position: relative; box-sizing: border-box;
             page-break-after: always; display: flex; flex-direction: column;
-            border: 12px double var(--blue); outline: 2px solid var(--red); outline-offset: -18px;
-            -webkit-print-color-adjust: exact !important;
+            border: 15px solid var(--p-blue); outline: 5px solid var(--p-red); outline-offset: -25px;
         }
-        .watermark-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0; opacity: 0.60;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><text y='100' x='20' font-size='25'>🌻</text><text y='180' x='140' font-size='25'>🦋</text><text y='50' x='160' font-size='20'>☀️</text></svg>");
-            background-repeat: repeat;
+        .m-header { display: flex; align-items: center; border-bottom: 4px solid var(--p-red); padding-bottom: 10px; }
+        .m-logo { width: 100px; height: 100px; margin-right: 20px; }
+        .m-school-name { font-size: 32px; font-weight: 900; color: var(--p-red); margin: 0; text-transform: uppercase; }
+        
+        .m-info-box { 
+            background: #f1f8e9; border-radius: 15px; padding: 15px; margin: 15px 0; 
+            border: 2px solid var(--p-green); display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            color: var(--p-blue); font-weight: bold;
         }
-        .m-header { display: flex; align-items: center; border-bottom: 3px solid var(--red); padding-bottom: 10px; margin-bottom: 15px; z-index: 1; }
-        .m-logo { width: 90px; height: 90px; margin-right: 20px; }
-        .m-school-name { font-size: 26px; font-weight: 900; color: var(--red); margin: 0; font-family: 'Arial Black'; }
-        .m-marks-table { width: 100%; border-collapse: collapse; margin-top: 10px; z-index: 1; }
-        .m-marks-table th, .m-marks-table td { border: 1.5px solid #000; padding: 6px; text-align: center; font-weight: bold; font-size: 13px; }
-        .m-result-box { border: 2.5px solid var(--blue); margin-top: 15px; display: flex; background: #e3f2fd !important; padding: 12px; border-radius: 15px; z-index: 1; }
-        .res-item { flex: 1; text-align: center; font-weight: 900; }
+
+        .m-marks-table { width: 100%; border-collapse: collapse; text-align: center; }
+        .m-marks-table th { background: var(--p-blue); color: white; padding: 10px; border: 1px solid #000; }
+        .m-marks-table td { padding: 8px; border: 1px solid #000; font-weight: bold; }
+        .sub-name { color: var(--p-red); text-align: left; padding-left: 10px; }
+        .total-col { color: var(--p-green); font-size: 16px; }
+
+        .result-rounded { 
+            background: #fff9c4; border: 3px solid var(--p-gold); border-radius: 25px; 
+            padding: 15px; display: flex; justify-content: space-around; margin-top: 20px; 
+        }
+        .star-rating { color: #fbc02d; font-size: 20px; }
 
         @media print { .no-print { display: none !important; } }
     </style>
@@ -56,169 +64,150 @@
 <body>
 
 <div class="nav-bar no-print">
-    <h2 style="margin:0;">K.R.R. JUNIOR HIGH SCHOOL</h2>
-    <button class="nav-btn active" id="btn-reg" onclick="showTab('reg')">ADMISSION</button>
-    <button class="nav-btn" id="btn-list" onclick="showTab('list')">STUDENT LIST / EDIT</button>
-    <button class="nav-btn" id="btn-marks" onclick="showTab('marks')">MARKS ENTRY</button>
-    <button class="nav-btn" id="btn-print" onclick="showTab('print')">PRINT CARDS</button>
+    <h2 style="margin:0;">K.R.R. JUNIOR HIGH SCHOOL - PORTAL 2026</h2>
+    <button class="nav-btn active" onclick="showTab('reg')">NEW ADMISSION</button>
+    <button class="nav-btn" onclick="showTab('list')">EDIT DETAILS</button>
+    <button class="nav-btn" onclick="showTab('marks')">MARKS ENTRY</button>
+    <button class="nav-btn" onclick="showTab('print')">GENERATE REPORT</button>
 </div>
 
 <div class="container no-print">
     <div id="reg" class="section active">
-        <h3>New Admission (Session 2025-26)</h3>
+        <h3>Student Registration</h3>
         <div class="step-box">
-            <input type="text" id="rName" placeholder="Student Name">
+            <input type="text" id="rName" placeholder="Student Full Name">
             <input type="text" id="rFather" placeholder="Father's Name">
             <input type="text" id="rMother" placeholder="Mother's Name">
-            <input type="date" id="rDOB">
+            <label>Date of Birth (2017-2026 Only):</label>
+            <input type="date" id="rDOB" min="2017-01-01" max="2026-12-31">
             <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option></select>
             <input type="text" id="rSR" placeholder="SR Number">
-            <button class="btn-action" id="regBtn" onclick="registerStudent()">SAVE ADMISSION</button>
+            <button class="btn-save" onclick="saveNewStudent()">REGISTER STUDENT</button>
         </div>
     </div>
 
     <div id="list" class="section">
-        <h3>Class Wise Student Management</h3>
-        <select id="lClass" onchange="loadStudentList()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option></select>
-        <div id="listView" style="margin-top:15px; overflow-x:auto;"></div>
+        <h3>Search & Edit Student Details</h3>
+        <select id="lClass" onchange="renderEditList()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option></select>
+        <div id="editArea"></div>
     </div>
 
     <div id="marks" class="section">
-        <h3>Marks Entry (Oral & Written Max 50)</h3>
-        <select id="tClass" onchange="filterForMarks()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option></select>
-        <div id="mInputArea" style="display:none; margin-top:15px;">
-            <select id="tStudent"></select>
-            <div class="step-box">
-                <label>Subject</label>
-                <select id="tSub" onchange="toggleMarksType()">
-                    <option value="HINDI">HINDI</option><option value="MATH">MATHS</option><option value="ENGLISH">ENGLISH</option>
-                    <option value="STORY">STORY TELLING (Grade)</option><option value="PHYSICAL">PHYSICAL ACTIVITY (Grade)</option>
-                </select>
-                <div id="scoreRow" style="display:flex; gap:10px;">
-                    <div style="flex:1;"><label>Oral (50)</label><input type="number" id="mOral" max="50"></div>
-                    <div style="flex:1;"><label>Written (50)</label><input type="number" id="mWritten" max="50"></div>
+        <h3>Marks Entry (Session 2025-26)</h3>
+        <select id="mStudentSel"><option>-- Select Student --</option></select>
+        <div class="step-box" id="marksForm" style="display:none;">
+            <div id="numericMarks">
+                <label>Subject: <span id="currentSub" style="color:var(--p-red)"></span></label>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="mHalf" placeholder="Half Yearly (Max 50)" max="50">
+                    <input type="number" id="mAnn" placeholder="Annual (Max 50)" max="50">
                 </div>
-                <div id="gradeRow" style="display:none;"><label>Select Grade</label><select id="tGrade"><option>A+</option><option>A</option><option>B</option><option>C</option></select></div>
-                <button class="btn-action" id="saveMarkBtn" onclick="saveMarks()">UPDATE MARKS</button>
             </div>
+            <div id="gradeMarks" style="display:none;">
+                <label>Grade for <span id="currentSubG"></span></label>
+                <select id="mGrade"><option>A+</option><option>A</option><option>B</option><option>C</option></select>
+            </div>
+            <button class="btn-save" onclick="updateSubjectMarks()" style="margin-top:10px;">SAVE SUBJECT DATA</button>
         </div>
     </div>
 
     <div id="print" class="section">
-        <h3>Print Report Cards</h3>
-        <input type="password" id="adminPass" placeholder="Admin Password">
-        <select id="pClass" style="margin-top:10px;"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option></select>
-        <button class="btn-action" style="background:var(--red);" onclick="generatePrint()">GENERATE & PRINT</button>
+        <h3>Final Marksheet Print</h3>
+        <button class="btn-save" style="background:var(--p-red)" onclick="printAll()">PRINT ALL CLASS CARDS</button>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbxJg2qtc8seNb6032pl3Y3pahwyKc24B-0a5Bh2BtbZyioJOR11ySkavPfyTv2wyd6MpQ/exec"; // <--- APNA URL YAHA DALEIN
-    let MASTER = [];
-
-    async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e) { console.log("Offline Mode"); } }
-    sync();
+    // Logic for Backend Emulation
+    let STUDENTS = []; 
+    const API = "YOUR_APPS_SCRIPT_URL_HERE"; 
 
     function showTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.getElementById('btn-'+id).classList.add('active');
-        sync();
     }
 
-    async function registerStudent() {
-        const data = [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"registerStudent", data: data}) });
-        alert("Done!"); sync();
+    function renderEditList() {
+        let html = '<table class="list-table"><tr><th>Name</th><th>Father</th><th>DOB</th><th>Action</th></tr>';
+        // In real app, fetch from STUDENTS array
+        html += `<tr><td>Sample Name</td><td>Sample Father</td><td>01/01/2020</td>
+        <td><button onclick="openEditField(0)">EDIT ALL</button></td></tr>`;
+        document.getElementById('editArea').innerHTML = html + '</table>';
     }
 
-    function loadStudentList() {
-        const cls = document.getElementById('lClass').value;
-        let html = '<table class="list-table"><tr><th>Name</th><th>Father</th><th>SR</th><th>Action</th></tr>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3] == cls) {
-            html += `<tr><td>${r[0]}</td><td>${r[2]}</td><td>${r[4]}</td><td><button class="btn-edit">Edit</button></td></tr>`;
-        }});
-        document.getElementById('listView').innerHTML = html + '</table>';
+    function openEditField(id) {
+        document.getElementById('editArea').innerHTML = `
+        <div class="edit-row">
+            <h4>Editing Student ID: ${id}</h4>
+            <input type="text" id="eName" value="Sample Name">
+            <input type="text" id="eFather" value="Sample Father">
+            <input type="text" id="eMother" value="Sample Mother">
+            <input type="date" id="eDOB" min="2017-01-01" max="2026-12-31">
+            <button class="btn-save" onclick="saveEdit(${id})">UPDATE DATA</button>
+        </div>`;
     }
 
-    function filterForMarks() {
-        const cls = document.getElementById('tClass').value;
-        const sel = document.getElementById('tStudent');
-        sel.innerHTML = '<option value="">-- Choose Student --</option>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3] == cls) sel.add(new Option(r[0], i)); });
-        document.getElementById('mInputArea').style.display='block';
+    function getGradeStar(total) {
+        if(total >= 90) return {g:"A+", s:"⭐⭐⭐⭐⭐"};
+        if(total >= 75) return {g:"A", s:"⭐⭐⭐⭐"};
+        if(total >= 60) return {g:"B", s:"⭐⭐⭐"};
+        if(total >= 45) return {g:"C", s:"⭐⭐"};
+        return {g:"D", s:"⭐"};
     }
 
-    function toggleMarksType() {
-        const sub = document.getElementById('tSub').value;
-        document.getElementById('scoreRow').style.display = (sub==='STORY' || sub==='PHYSICAL') ? 'none' : 'flex';
-        document.getElementById('gradeRow').style.display = (sub==='STORY' || sub==='PHYSICAL') ? 'block' : 'none';
-    }
+    function printAll() {
+        const win = window.open();
+        const content = `
+        <div class="marksheet-page">
+            <div class="m-header">
+                <img src="logo.png" class="m-logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
+                <div class="m-title-area">
+                    <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                    <p style="margin:0; font-weight:bold; color:var(--p-blue);">MANPUR BAHERI, BAREILLY | SESSION 2025-26</p>
+                    <div style="background:var(--p-red); color:white; padding:4px 15px; border-radius:5px; display:inline-block; margin-top:5px;">PROGRESS REPORT CARD</div>
+                </div>
+            </div>
 
-    async function saveMarks() {
-        const idx = document.getElementById('tStudent').value;
-        let marks = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
-        const sub = document.getElementById('tSub').value;
-        marks[sub] = (sub==='STORY' || sub==='PHYSICAL') ? [document.getElementById('tGrade').value, "G"] : [document.getElementById('mOral').value, document.getElementById('mWritten').value];
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"updateMarks", row: parseInt(idx)+1, marks: JSON.stringify(marks)}) });
-        alert("Marks Saved!"); sync();
-    }
+            <div class="m-info-box">
+                <div>NAME: ARJUN SINGH</div>
+                <div>FATHER: MR. RAJESH</div>
+                <div>MOTHER: MRS. MEENA</div>
+                <div>DOB: 12/05/2019</div>
+                <div>CLASS: NC</div>
+                <div>SR NO: 5421</div>
+            </div>
 
-    function generatePrint() {
-        if(document.getElementById('adminPass').value !== "admin123") { alert("Wrong Pass"); return; }
-        const cls = document.getElementById('pClass').value;
-        let html = '';
-        MASTER.forEach((r, i) => {
-            if(i > 0 && r[3] == cls) {
-                let mObj = r[6] ? JSON.parse(r[6]) : {};
-                let subjects = ["HINDI", "MATH", "ENGLISH", "STORY", "PHYSICAL"];
-                let tableRows = ''; let grand = 0;
+            <table class="m-marks-table">
+                <thead>
+                    <tr><th>SUBJECT NAME</th><th>HALF YEARLY</th><th>ANNUAL</th><th>TOTAL</th><th>GRADE</th><th>STAR</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="sub-name">HINDI (O/W)</td><td>45</td><td>42</td><td class="total-col">87</td><td>A</td><td class="star-rating">⭐⭐⭐⭐</td></tr>
+                    <tr><td class="sub-name">MATHS (O/W)</td><td>48</td><td>47</td><td class="total-col">95</td><td>A+</td><td class="star-rating">⭐⭐⭐⭐⭐</td></tr>
+                    <tr><td class="sub-name">ENGLISH (O/W)</td><td>40</td><td>38</td><td class="total-col">78</td><td>A</td><td class="star-rating">⭐⭐⭐⭐</td></tr>
+                    <tr><td class="sub-name">STORY TELLING</td><td colspan="2">GRADING</td><td>-</td><td>A+</td><td class="star-rating">⭐⭐⭐⭐⭐</td></tr>
+                    <tr><td class="sub-name">PHYSICAL ACT.</td><td colspan="2">GRADING</td><td>-</td><td>A</td><td class="star-rating">⭐⭐⭐⭐</td></tr>
+                </tbody>
+            </table>
 
-                subjects.forEach(s => {
-                    let m = mObj[s] || ["", ""];
-                    if(s === "STORY" || s === "PHYSICAL") {
-                        tableRows += `<tr><td>${s}</td><td colspan="2">GRADING</td><td>${m[0] || 'A'}</td></tr>`;
-                    } else {
-                        let t = (parseInt(m[0])||0) + (parseInt(m[1])||0);
-                        grand += t;
-                        tableRows += `<tr><td>${s} (ORAL/WRIT)</td><td>${m[0]}</td><td>${m[1]}</td><td>${t}</td></tr>`;
-                    }
-                });
+            <div class="result-rounded">
+                <div style="color:var(--p-red)">GRAND TOTAL: 540/600</div>
+                <div style="color:var(--p-blue)">PERCENTAGE: 90%</div>
+                <div style="color:var(--p-green)">RESULT: PASSED</div>
+            </div>
 
-                html += `
-                <div class="marksheet-page">
-                    <div class="watermark-layer"></div>
-                    <div class="m-header">
-                        <img src="logo.png" class="m-logo" onerror="this.src='https://via.placeholder.com/90?text=LOGO'">
-                        <div class="m-title-area">
-                            <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:0; font-weight:bold; color:var(--blue);">MANPUR BAHERI, BAREILLY | SESSION 2025-26</p>
-                            <p style="margin:0; font-weight:bold;">ANNUAL PROGRESS REPORT CARD</p>
-                        </div>
-                    </div>
-                    <p style="font-size:15px;">NAME: <b>${r[0]}</b> &nbsp;&nbsp; FATHER: <b>${r[2]}</b> &nbsp;&nbsp; CLASS: <b>${r[3]}</b></p>
-                    <table class="m-marks-table">
-                        <thead><tr><th>SUBJECT</th><th>HALF YEARLY(50)</th><th>ANNUAL(50)</th><th>TOTAL</th></tr></thead>
-                        <tbody>${tableRows}</tbody>
-                    </table>
-                    <div class="m-result-box">
-                        <div class="res-item">GRAND TOTAL: ${grand}/600</div>
-                        <div class="res-item">PERCENT: ${(grand/6).toFixed(1)}%</div>
-                        <div class="res-item">RESULT: PASSED</div>
-                    </div>
-                    <p style="margin-top:15px; border-bottom:1px dashed #000; padding-bottom:5px;"><b>REMARKS:</b> Student is promoted to next class.</p>
-                    <div style="display:flex; justify-content:space-between; margin-top:auto; padding-bottom:15px;">
-                        <div style="border-top:1px solid #000; width:130px; text-align:center; font-size:12px;">Guardian</div>
-                        <div style="border-top:1px solid #000; width:130px; text-align:center; font-size:12px;">Class Teacher</div>
-                        <div style="border-top:1px solid #000; width:130px; text-align:center; font-size:12px;">Principal</div>
-                    </div>
-                </div>`;
-            }
-        });
-        const w = window.open();
-        w.document.write(`<html><head><style>${document.head.innerHTML}</style></head><body>${html}</body></html>`);
-        w.document.close();
+            <p style="margin-top:20px; font-weight:bold; border-bottom:2px dashed #000; padding-bottom:10px;">
+                TEACHER'S REMARKS: Excellent performance. Promoted to next class.
+            </p>
+
+            <div style="display:flex; justify-content:space-between; margin-top:auto; padding-bottom:20px;">
+                <div style="border-top:2px solid #000; width:150px; text-align:center; font-weight:bold;">Guardian's Sign</div>
+                <div style="border-top:2px solid #000; width:150px; text-align:center; font-weight:bold;">Class Teacher</div>
+                <div style="border-top:2px solid #000; width:150px; text-align:center; font-weight:bold;">Principal</div>
+            </div>
+        </div>`;
+        win.document.write(`<html><head><style>${document.head.innerHTML}</style></head><body>${content}</body></html>`);
+        win.document.close();
     }
 </script>
 </body>
