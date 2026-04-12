@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K.R.R. JUNIOR HIGH SCHOOL - Portal</title>
     <style>
-    /* --- FULL PAGE SCATTERED WATERMARK --- */
-    .marksheet-page {
-        width: 210mm; height: 296mm; padding: 25mm; margin: 0 auto;
-        background: #fff !important; position: relative; box-sizing: border-box;
-        page-break-after: always; display: flex; flex-direction: column;
-        border: 15px solid transparent;
-        border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
-        
-        /* Yahan se poore page par watermark repeat hoga */
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 100 100'><text y='20%' x='10%' fill='rgba(255,105,180,0.12)' font-size='14'>🌸</text><text y='50%' x='70%' fill='rgba(255,105,180,0.12)' font-size='14'>🦋</text><text y='80%' x='30%' fill='rgba(255,105,180,0.12)' font-size='14'>☀️</text><text y='10%' x='80%' fill='rgba(255,105,180,0.12)' font-size='14'>🌻</text></svg>");
-        background-repeat: repeat;
-        -webkit-print-color-adjust: exact !important;
-    }
-    /* Baaki saari designing wahi rahegi jo pehle thi */
         :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --green: #2e7d32; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; }
         
@@ -26,7 +12,7 @@
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 18px; cursor: pointer; border-radius: 5px; margin: 5px; font-weight: bold; }
         .nav-btn.active { background: var(--red); }
 
-        .container { max-width: 800px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .section { display: none; }
         .section.active { display: block; }
 
@@ -35,7 +21,11 @@
         select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; margin-bottom: 12px; }
         .btn-action { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
 
-        /* --- MARKSHEET DESIGN (ORIGINAL) --- */
+        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; background: white; }
+        .list-table th, .list-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .list-table th { background: #1a237e; color: white; }
+
+        /* --- MARKSHEET DESIGN (PREMIUM) --- */
         @page { size: A4; margin: 0; }
         .marksheet-page {
             width: 210mm; height: 296mm; padding: 25mm; margin: 0 auto;
@@ -43,11 +33,14 @@
             page-break-after: always; display: flex; flex-direction: column;
             border: 15px solid transparent;
             border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><text y='30%' x='10%' fill='rgba(255,182,193,0.1)' font-size='12'>🌸</text><text y='60%' x='80%' fill='rgba(255,182,193,0.1)' font-size='12'>🦋</text><text y='90%' x='40%' fill='rgba(255,182,193,0.1)' font-size='12'>☀️</text><text y='10%' x='70%' fill='rgba(255,182,193,0.1)' font-size='12'>🌻</text></svg>");
+            
+            /* Full Page Scattered Watermark */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><text y='25%' x='15%' fill='rgba(255,105,180,0.1)' font-size='14'>🌸</text><text y='55%' x='75%' fill='rgba(255,105,180,0.1)' font-size='14'>🦋</text><text y='85%' x='35%' fill='rgba(255,105,180,0.1)' font-size='14'>☀️</text><text y='15%' x='85%' fill='rgba(255,105,180,0.1)' font-size='14'>🌻</text></svg>");
             background-repeat: repeat;
+            -webkit-print-color-adjust: exact !important;
         }
 
-        .m-header { text-align: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; position: relative; }
+        .m-header { text-align: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; }
         .m-logo { width: 100px; height: 100px; margin-bottom: 5px; }
         .m-school-name { font-size: 34px; font-weight: 900; color: var(--green) !important; margin: 0; font-family: 'Times New Roman'; }
         .m-banner { background: #ffeb3b !important; color: #c62828 !important; padding: 8px 35px; border-radius: 50px; display: inline-block; font-size: 20px; font-weight: bold; border: 2px solid #c62828; margin: 12px 0; }
@@ -70,6 +63,7 @@
 <div class="nav-bar no-print">
     <h2 style="margin:0;">K.R.R. JUNIOR HIGH SCHOOL</h2>
     <button class="nav-btn active" id="btn-reg" onclick="showTab('reg')">ADMISSION</button>
+    <button class="nav-btn" id="btn-list" onclick="showTab('list')">STUDENT LIST/EDIT</button>
     <button class="nav-btn" id="btn-teacher" onclick="showTab('teacher')">MARKS ENTRY</button>
     <button class="nav-btn" id="btn-admin" onclick="showTab('admin')">PRINT</button>
 </div>
@@ -88,6 +82,12 @@
         </div>
     </div>
 
+    <div id="list" class="section">
+        <h3>Class Wise Student List</h3>
+        <select id="lClass" onchange="loadStudentList()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+        <div id="listView" style="margin-top:15px; overflow-x:auto;"></div>
+    </div>
+
     <div id="teacher" class="section">
         <h3>Marks Entry (Max 50)</h3>
         <select id="tClass" onchange="filterForMarks()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
@@ -99,9 +99,9 @@
                     <option>HINDI</option><option>ENGLISH</option><option>MATHS</option><option>DRAWING</option><option>STORY TELLING</option>
                 </select>
                 <label>Half Yearly (Max 50)</label>
-                <input type="number" id="m1" placeholder="Enter Marks (0-50)">
+                <input type="number" id="m1" placeholder="Enter (0-50)">
                 <label>Annual (Max 50)</label>
-                <input type="number" id="m2" placeholder="Enter Marks (0-50)">
+                <input type="number" id="m2" placeholder="Enter (0-50)">
                 <button class="btn-action" onclick="saveMarks()">UPDATE MARKS</button>
             </div>
         </div>
@@ -119,11 +119,11 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbxedMk_AP1lRch5n5qVNbi10Y2rzUBVu32YNfdwqvyTZAIiddKzh5VJaJcDFE7I98SzpQ/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbxedMk_AP1lRch5n5qVNbi10Y2rzUBVu32YNfdwqvyTZAIiddKzh5VJaJcDFE7I98SzpQ/execE"; // APNA URL YAHAN DALEIN
     let MASTER = [];
 
     async function sync() {
-        try { const res = await fetch(API); MASTER = await res.json(); } catch(e) {}
+        try { const res = await fetch(API); MASTER = await res.json(); } catch(e) { console.error("Sync Error", e); }
     }
     sync();
 
@@ -139,10 +139,34 @@
         document.getElementById('m2').value = "";
     }
 
+    // LIST VIEW LOGIC
+    function loadStudentList() {
+        const cls = document.getElementById('lClass').value;
+        if(!cls) return;
+        let html = '<table class="list-table"><tr><th>Name</th><th>Father</th><th>DOB</th><th>Action</th></tr>';
+        MASTER.forEach((r, i) => {
+            if(i>0 && r[3] == cls) {
+                html += `<tr>
+                    <td><input id="en${i}" value="${r[0]}" style="width:100%; border:none;"></td>
+                    <td><input id="ef${i}" value="${r[2]}" style="width:100%; border:none;"></td>
+                    <td><input id="ed${i}" value="${r[5]}" style="width:100%; border:none;"></td>
+                    <td><button onclick="updateStudent(${i})">Save</button></td>
+                </tr>`;
+            }
+        });
+        document.getElementById('listView').innerHTML = html + '</table>';
+    }
+
+    async function updateStudent(idx) {
+        const rowData = [document.getElementById('en'+idx).value, MASTER[idx][1], document.getElementById('ef'+idx).value, MASTER[idx][3], MASTER[idx][4], document.getElementById('ed'+idx).value];
+        await fetch(API, { method:"POST", body: JSON.stringify({action:"editStudent", row: idx+1, data: rowData}) });
+        alert("Updated!"); sync();
+    }
+
     function filterForMarks() {
         const cls = document.getElementById('tClass').value;
         const sel = document.getElementById('tStudent');
-        sel.innerHTML = '<option value="">-- Choose Student --</option>';
+        sel.innerHTML = '<option value="">-- Select Student --</option>';
         MASTER.forEach((r, i) => { if(i>0 && r[3] == cls) sel.add(new Option(r[0], i)); });
         document.getElementById('studentSelArea').style.display='block';
     }
@@ -152,7 +176,7 @@
         const sub = document.getElementById('tSub').value;
         const m1 = document.getElementById('m1').value;
         const m2 = document.getElementById('m2').value;
-        if(m1 > 50 || m2 > 50) { alert("Error: Marks cannot be more than 50"); return; }
+        if(m1 > 50 || m2 > 50) { alert("Max marks is 50"); return; }
         
         let marks = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
         marks[sub] = [m1, m2];
@@ -207,7 +231,7 @@
                         <tbody>${tableRows}</tbody>
                     </table>
                     <div class="m-sig-row">
-                        <div class="m-sig-box">Guardian</div><div class="m-sig-box">Class Teacher</div><div class="m-sig-box">Principal</div>
+                        <div class="m-sig-box">Guardian</div><div class="m-sig-box">Teacher</div><div class="m-sig-box">Principal</div>
                     </div>
                 </div>`;
             }
