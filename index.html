@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K.R.R. JUNIOR HIGH SCHOOL - Secure Portal</title>
+    <title>K.R.R. JUNIOR HIGH SCHOOL - Portal</title>
     <style>
-        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --green: #2e7d32; --pink: #e91e63; --yellow: #ffeb3b; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 0;}
+    /* --- FULL PAGE SCATTERED WATERMARK --- */
+    .marksheet-page {
+        width: 210mm; height: 296mm; padding: 25mm; margin: 0 auto;
+        background: #fff !important; position: relative; box-sizing: border-box;
+        page-break-after: always; display: flex; flex-direction: column;
+        border: 15px solid transparent;
+        border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
         
-        .nav-bar { background: var(--blue); padding: 15px; text-align: center; color: white; position: sticky; top:0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        /* Yahan se poore page par watermark repeat hoga */
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 100 100'><text y='20%' x='10%' fill='rgba(255,105,180,0.12)' font-size='14'>🌸</text><text y='50%' x='70%' fill='rgba(255,105,180,0.12)' font-size='14'>🦋</text><text y='80%' x='30%' fill='rgba(255,105,180,0.12)' font-size='14'>☀️</text><text y='10%' x='80%' fill='rgba(255,105,180,0.12)' font-size='14'>🌻</text></svg>");
+        background-repeat: repeat;
+        -webkit-print-color-adjust: exact !important;
+    }
+    /* Baaki saari designing wahi rahegi jo pehle thi */
+        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --green: #2e7d32; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; }
+        
+        .nav-bar { background: var(--blue); padding: 15px; text-align: center; color: white; position: sticky; top:0; z-index: 1000; }
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 18px; cursor: pointer; border-radius: 5px; margin: 5px; font-weight: bold; }
         .nav-btn.active { background: var(--red); }
 
@@ -21,63 +35,32 @@
         select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; margin-bottom: 12px; }
         .btn-action { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
 
-        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        .list-table th, .list-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .list-table th { background: #eee; }
-
-        /* --- REDESIGNED MARKSHEET DESIGN --- */
+        /* --- MARKSHEET DESIGN (ORIGINAL) --- */
         @page { size: A4; margin: 0; }
         .marksheet-page {
             width: 210mm; height: 296mm; padding: 25mm; margin: 0 auto;
             background: #fff !important; position: relative; box-sizing: border-box;
             page-break-after: always; display: flex; flex-direction: column;
-            
-            /* Scattered Watermark (Emojis) */
+            border: 15px solid transparent;
+            border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><text y='30%' x='10%' fill='rgba(255,182,193,0.1)' font-size='12'>🌸</text><text y='60%' x='80%' fill='rgba(255,182,193,0.1)' font-size='12'>🦋</text><text y='90%' x='40%' fill='rgba(255,182,193,0.1)' font-size='12'>☀️</text><text y='10%' x='70%' fill='rgba(255,182,193,0.1)' font-size='12'>🌻</text></svg>");
             background-repeat: repeat;
-            -webkit-print-color-adjust: exact !important;
-            border-radius: 0;
-            overflow: hidden;
         }
 
-        /* Full Page Floral Border with Butterfly Corners */
-        .marksheet-page .m-border-box {
-            position: absolute; top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
-            border: 8px solid transparent;
-            border-image: url('https://img.freepik.com/free-vector/floral-frame-design_1102-601.jpg') 15% round;
-            pointer-events: none; z-index: 5;
-        }
+        .m-header { text-align: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; position: relative; }
+        .m-logo { width: 100px; height: 100px; margin-bottom: 5px; }
+        .m-school-name { font-size: 34px; font-weight: 900; color: var(--green) !important; margin: 0; font-family: 'Times New Roman'; }
+        .m-banner { background: #ffeb3b !important; color: #c62828 !important; padding: 8px 35px; border-radius: 50px; display: inline-block; font-size: 20px; font-weight: bold; border: 2px solid #c62828; margin: 12px 0; }
         
-        .marksheet-page .m-corner { position: absolute; font-size: 40px; z-index: 6; }
-        .m-top-left { top: -15px; left: -15px; }
-        .m-top-right { top: -15px; right: -15px; }
-        .m-bottom-left { bottom: -15px; left: -15px; }
-        .m-bottom-right { bottom: -15px; right: -15px; }
-
-        .marksheet-page .m-content { position: relative; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; }
-
-        .m-header { text-align: center; border-bottom: 3px double var(--gold); padding-bottom: 10px; margin-top: 20px;}
-        .m-logo { width: 110px; height: 110px; margin-bottom: 5px; border-radius: 50%; border: 3px solid #eee; }
-        .m-school-name { font-size: 36px; font-weight: 900; color: var(--green) !important; margin: 0; font-family: 'Times New Roman'; letter-spacing: 0.5px; text-transform: uppercase; }
-        .m-banner { background: var(--yellow) !important; color: #c62828 !important; padding: 10px 45px; border-radius: 50px; display: inline-block; font-size: 24px; font-weight: bold; border: 2.5px solid #c62828; margin: 15px 0; font-family: 'Times New Roman'; }
+        .m-info-table { width: 100%; margin: 20px 0; font-size: 18px; border-collapse: collapse; }
+        .m-info-table td { padding: 8px 5px; border-bottom: 1px dashed #bbb; }
         
-        .m-info-table { width: 100%; margin: 30px 0; font-size: 20px; border-collapse: collapse; }
-        .m-info-table td { padding: 12px 10px; border-bottom: 1.5px dashed #ccc; vertical-align: middle; }
-        .m-label { font-weight: bold; color: #444; font-size: 19px; }
-        .m-val { color: var(--red) !important; font-weight: bold; padding-left: 10px; text-transform: uppercase; }
-
-        /* Colorful Table Style */
-        .m-marks-table { width: 100%; border-collapse: collapse; border: 2.5px solid #000; margin-top: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
-        .m-marks-table th { background: #e3f2fd !important; color: #1a237e !important; padding: 18px 10px; border: 2px solid #000; font-size: 18px; text-transform: uppercase;}
-        .m-marks-table td { border: 2px solid #000; padding: 15px 10px; text-align: center; font-weight: bold; font-size: 22px; }
+        .m-marks-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
+        .m-marks-table th, .m-marks-table td { border: 2px solid #000; padding: 10px; text-align: center; font-weight: bold; }
+        .m-marks-table th { background: #e3f2fd !important; color: #1a237e !important; }
         
-        /* Specific Column Colors */
-        .m-col-sub { color: #1a237e !important; text-align: left !important; padding-left: 20px !important; }
-        .m-col-total { color: var(--green) !important; }
-        .m-col-grade { color: var(--gold) !important; font-size: 26px !important;}
-
-        .m-sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 60px; }
-        .m-sig-box { border-top: 2px solid #000; width: 180px; text-align: center; font-size: 16px; font-weight: bold; padding-top: 8px; color: #333; }
+        .m-sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 30px; }
+        .m-sig-box { border-top: 1.5px solid #000; width: 160px; text-align: center; font-size: 14px; padding-top: 5px; }
 
         @media print { .no-print { display: none !important; } }
     </style>
@@ -86,70 +69,57 @@
 
 <div class="nav-bar no-print">
     <h2 style="margin:0;">K.R.R. JUNIOR HIGH SCHOOL</h2>
-    <p style="margin:5px 0 10px 0; font-size: 12px; opacity: 0.8;">Secure Admin Control Panel</p>
     <button class="nav-btn active" id="btn-reg" onclick="showTab('reg')">ADMISSION</button>
-    <button class="nav-btn" id="btn-list" onclick="showTab('list')">STUDENT LIST/EDIT</button>
     <button class="nav-btn" id="btn-teacher" onclick="showTab('teacher')">MARKS ENTRY</button>
-    <button class="nav-btn" id="btn-admin" onclick="showTab('admin')">PRINT MARKSHEET</button>
+    <button class="nav-btn" id="btn-admin" onclick="showTab('admin')">PRINT</button>
 </div>
 
 <div class="container no-print">
     <div id="reg" class="section active">
-        <h3>New Admission Form</h3>
+        <h3>New Admission</h3>
         <div class="step-box">
-            <label>Student Name</label><input type="text" id="rName">
-            <label>Father's Name</label><input type="text" id="rFather">
-            <label>Mother's Name</label><input type="text" id="rMother">
-            <label>Date of Birth</label><input type="date" id="rDOB">
-            <label>Class</label>
+            <input type="text" id="rName" placeholder="Student Name">
+            <input type="text" id="rFather" placeholder="Father's Name">
+            <input type="text" id="rMother" placeholder="Mother's Name">
+            <input type="date" id="rDOB">
             <select id="rClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-            <label>SR Number (Optional)</label><input type="text" id="rSR">
-            <button class="btn-action" id="regBtn" onclick="registerStudent()">SAVE DATA</button>
+            <input type="text" id="rSR" placeholder="SR Number (Optional)">
+            <button class="btn-action" onclick="registerStudent()">SAVE DATA</button>
         </div>
     </div>
 
-    <div id="list" class="section">
-        <h3>Edit Student Details</h3>
-        <select id="lClass" onchange="loadStudentList()"><option value="">-- Choose Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-        <div id="listView" style="margin-top:15px; overflow-x:auto;"></div>
-    </div>
-
     <div id="teacher" class="section">
-        <h3>Marks Entry</h3>
-        <select id="tClass" onchange="filterForMarks()"><option value="">-- Choose Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
+        <h3>Marks Entry (Max 50)</h3>
+        <select id="tClass" onchange="filterForMarks()"><option value="">-- Select Class --</option><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
         <div id="studentSelArea" style="display:none; margin-top:15px;">
-            <label>Select Student</label>
-            <select id="tStudent" onchange="document.getElementById('mFields').style.display='block'"></select>
-            <div id="mFields" class="step-box" style="display:none; margin-top:10px;">
+            <select id="tStudent" onchange="resetMarksFields()"></select>
+            <div class="step-box" style="margin-top:10px;">
                 <label>Subject</label>
-                <select id="tSub">
+                <select id="tSub" onchange="resetMarksFields()">
                     <option>HINDI</option><option>ENGLISH</option><option>MATHS</option><option>DRAWING</option><option>STORY TELLING</option>
                 </select>
-                <input type="number" id="m1" placeholder="Half Yearly (Max 100)">
-                <input type="number" id="m2" placeholder="Annual (Max 100)">
+                <label>Half Yearly (Max 50)</label>
+                <input type="number" id="m1" placeholder="Enter Marks (0-50)">
+                <label>Annual (Max 50)</label>
+                <input type="number" id="m2" placeholder="Enter Marks (0-50)">
                 <button class="btn-action" onclick="saveMarks()">UPDATE MARKS</button>
             </div>
         </div>
     </div>
 
     <div id="admin" class="section">
-        <h3>Bulk Print Section</h3>
-        <div id="print-lock" class="step-box">
-            <label>Enter Admin Password to Unlock Printing</label>
-            <input type="password" id="adminPass" placeholder="Password">
-            <button class="btn-action" onclick="unlockPrint()">UNLOCK PRINTING</button>
-        </div>
-        <div id="print-area" style="display:none;">
-            <label>Select Class for Bulk Print</label>
+        <h3>Admin Print Panel</h3>
+        <input type="password" id="adminPass" placeholder="Admin Password">
+        <button class="btn-action" onclick="unlockPrint()">UNLOCK</button>
+        <div id="print-area" style="display:none; margin-top:20px;">
             <select id="printClass"><option>NC</option><option>LKG</option><option>UKG</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select>
-            <button class="btn-action" style="background:var(--red);" onclick="generatePrint()">GENERATE ALL MARKSHEETS</button>
+            <button class="btn-action" style="background:var(--red);" onclick="generatePrint()">GENERATE MARKSHEETS</button>
         </div>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbx6g_9-Xz_nB2h1XU8hS0Dk_zS9K7o2cW_yH_H4I0Z0w/exec"; // PASTE YOUR URL HERE
-    const SECURE_PASS = "admin123"; // CHANGE YOUR PASSWORD HERE
+    const API = "YOUR_SCRIPT_URL_HERE"; 
     let MASTER = [];
 
     async function sync() {
@@ -164,41 +134,9 @@
         document.getElementById('btn-' + id).classList.add('active');
     }
 
-    function unlockPrint() {
-        if(document.getElementById('adminPass').value === SECURE_PASS) {
-            document.getElementById('print-lock').style.display = 'none';
-            document.getElementById('print-area').style.display = 'block';
-        } else { alert("Incorrect Password!"); }
-    }
-
-    async function registerStudent() {
-        const btn = document.getElementById('regBtn');
-        const data = [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
-        btn.disabled = true;
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"registerStudent", data: data}) });
-        alert("Success!"); location.reload();
-    }
-
-    function loadStudentList() {
-        const cls = document.getElementById('lClass').value;
-        let html = '<table class="list-table"><tr><th>Name</th><th>Father</th><th>DOB</th><th>Action</th></tr>';
-        MASTER.forEach((r, i) => {
-            if(i>0 && r[3] == cls) {
-                html += `<tr>
-                    <td><input id="en${i}" value="${r[0]}" style="width:100%"></td>
-                    <td><input id="ef${i}" value="${r[2]}" style="width:100%"></td>
-                    <td><input id="ed${i}" value="${r[5]}" style="width:100%"></td>
-                    <td><button onclick="updateStudent(${i})">Save</button></td>
-                </tr>`;
-            }
-        });
-        document.getElementById('listView').innerHTML = html + '</table>';
-    }
-
-    async function updateStudent(idx) {
-        const rowData = [document.getElementById('en'+idx).value, MASTER[idx][1], document.getElementById('ef'+idx).value, MASTER[idx][3], MASTER[idx][4], document.getElementById('ed'+idx).value];
-        await fetch(API, { method:"POST", body: JSON.stringify({action:"editStudent", row: idx+1, data: rowData}) });
-        alert("Updated!"); sync();
+    function resetMarksFields() {
+        document.getElementById('m1').value = "";
+        document.getElementById('m2').value = "";
     }
 
     function filterForMarks() {
@@ -212,21 +150,28 @@
     async function saveMarks() {
         const idx = document.getElementById('tStudent').value;
         const sub = document.getElementById('tSub').value;
+        const m1 = document.getElementById('m1').value;
+        const m2 = document.getElementById('m2').value;
+        if(m1 > 50 || m2 > 50) { alert("Error: Marks cannot be more than 50"); return; }
+        
         let marks = MASTER[idx][6] ? JSON.parse(MASTER[idx][6]) : {};
-        marks[sub] = [document.getElementById('m1').value, document.getElementById('m2').value];
+        marks[sub] = [m1, m2];
         await fetch(API, { method:"POST", body: JSON.stringify({action:"updateMarks", row: parseInt(idx)+1, marks: JSON.stringify(marks)}) });
-        alert("Marks Updated!"); sync();
+        alert("Success!"); sync();
     }
 
-    // Advanced Star Grading and PASS/FAIL Logic
-    function getGradeStars(total, sub) {
-        if (!total || total === "-") return "-";
-        if (total >= 90) return "⭐⭐⭐⭐⭐"; // Outstanding
-        if (total >= 80) return "⭐⭐⭐⭐";   // Excellent
-        if (total >= 70) return "⭐⭐⭐";     // Good
-        if (total >= 60) return "⭐⭐";       // Satisfactory
-        if (total >= 33) return "⭐";        // Improve Needed
-        return "Improve"; // Failed
+    function getStars(total) {
+        if(total >= 90) return "⭐⭐⭐⭐⭐";
+        if(total >= 75) return "⭐⭐⭐⭐";
+        if(total >= 60) return "⭐⭐⭐";
+        if(total >= 45) return "⭐⭐";
+        return "⭐";
+    }
+
+    function unlockPrint() {
+        if(document.getElementById('adminPass').value === "admin123") {
+            document.getElementById('print-area').style.display = 'block';
+        } else { alert("Wrong Password!"); }
     }
 
     function generatePrint() {
@@ -237,66 +182,32 @@
                 let marks = r[6] ? JSON.parse(r[6]) : {};
                 let subjects = ["HINDI", "ENGLISH", "MATHS", "DRAWING", "STORY TELLING"];
                 let tableRows = '';
-                let grandTotal = 0;
-                let subCount = 0;
-                let isFailed = false;
-
                 subjects.forEach(s => {
                     let m = marks[s] || ["", ""];
-                    let m1 = (parseInt(m[0]) || 0);
-                    let m2 = (parseInt(m[1]) || 0);
-                    let total = m1 + m2;
-                    let displayTotal = (marks[s]) ? total : "";
-                    if (total === 0 && !marks[s]) displayTotal = "";
-                    if(displayTotal !== "") { grandTotal += total; subCount++; }
-                    if (marks[s] && total < 33) isFailed = true; // Failing condition
-
-                    let grade = getGradeStars(displayTotal, s);
-                    
-                    tableRows += `<tr><td class="m-col-sub">${s}</td><td>${m[0]}</td><td>${m[1]}</td><td class="m-col-total">${displayTotal}</td><td class="m-col-grade">${grade}</td></tr>`;
+                    let t = (parseInt(m[0]) || 0) + (parseInt(m[1]) || 0);
+                    let st = (m[0] !== "" || m[1] !== "") ? getStars(t) : "";
+                    tableRows += `<tr><td>${s}</td><td>${m[0]}</td><td>${m[1]}</td><td>${t}</td><td style="color:var(--gold)">${st}</td></tr>`;
                 });
-                
-                let outOf = subCount * 200; // Each subject max 200
-                let percentage = (outOf > 0) ? ((grandTotal / outOf) * 100).toFixed(2) : "-";
-                let result = (grandTotal > 0 && outOf > 0 && grandTotal >= (outOf * 0.33) && !isFailed) ? "PASS" : (grandTotal > 0 ? "FAIL" : "-");
-                let resultColor = (result === "PASS") ? var(--green) : var(--red);
-
                 html += `
                 <div class="marksheet-page">
-                    <div class="m-border-box">
-                        <div class="m-corner m-top-left">🦋</div>
-                        <div class="m-corner m-top-right">🌸</div>
-                        <div class="m-corner m-bottom-left">🌻</div>
-                        <div class="m-corner m-bottom-right">🦋</div>
+                    <div class="m-header">
+                        <img src="logo.jpg" class="m-logo">
+                        <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                        <p style="font-weight:bold; margin:0;">MANPUR BAHERI, BAREILLY (U.P.)</p>
+                        <p style="font-weight:bold; margin:0;">Session: 2025-26</p>
+                        <div class="m-banner">ANNUAL REPORT CARD</div>
                     </div>
-                    <div class="m-content">
-                        <div class="m-header">
-                            <img src="main/root"> <h1 class="m-school-name">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="font-weight:bold; margin:2px; font-size:16px;">MANPUR BAHERI, BAREILLY (U.P.)</p>
-                            <p style="font-weight:bold; margin:2px; font-size:16px;">Academic Session: 2025-26</p>
-                            <div class="m-banner">ANNUAL PROGRESS REPORT</div>
-                        </div>
-                        <table class="m-info-table">
-                            <tr><td>NAME: <b>${r[0]}</b></td><td>SR NO: <b>${r[4] || ''}</b></td></tr>
-                            <tr><td>FATHER: <b>${r[2]}</b></td><td>CLASS: <b>${r[3]}</b></td></tr>
-                            <tr><td>MOTHER: <b>${r[1]}</b></td><td>DOB: <b>${r[5]}</b></td></tr>
-                        </table>
-                        <table class="m-marks-table">
-                            <thead><tr><th>SUBJECTS</th><th>HALF YEARLY (100) th><th>ANNUAL (100) th><th>TOTAL (200) th><th>GRADE</th></tr></thead>
-                            <tbody>${tableRows}</tbody>
-                        </table>
-                        
-                        <div style="margin-top:20px; text-align:right; padding-right:15px; font-size:22px; z-index:10; position:relative; font-family:'Times New Roman';">
-                            Grand Total: <b style="color:var(--green)">${grandTotal}</b> / ${outOf} <br>
-                            Percentage: <b style="color:var(--gold)">${percentage}%</b> <br>
-                            Result: <b style="color:${resultColor}; font-size:26px;">${result}</b>
-                        </div>
-
-                        <div class="m-sig-row">
-                            <div class="m-sig-box">Guardian's Sign</div>
-                            <div class="m-sig-box">Class Teacher</div>
-                            <div class="m-sig-box">Principal Signature</div>
-                        </div>
+                    <table class="m-info-table">
+                        <tr><td>NAME: <b>${r[0]}</b></td><td>SR: <b>${r[4] || ''}</b></td></tr>
+                        <tr><td>FATHER: <b>${r[2]}</b></td><td>CLASS: <b>${r[3]}</b></td></tr>
+                        <tr><td>MOTHER: <b>${r[1]}</b></td><td>DOB: <b>${r[5]}</b></td></tr>
+                    </table>
+                    <table class="m-marks-table">
+                        <thead><tr><th>SUBJECT</th><th>HY(50)</th><th>ANN(50)</th><th>TOTAL</th><th>GRADE</th></tr></thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                    <div class="m-sig-row">
+                        <div class="m-sig-box">Guardian</div><div class="m-sig-box">Class Teacher</div><div class="m-sig-box">Principal</div>
                     </div>
                 </div>`;
             }
@@ -305,6 +216,12 @@
         w.document.write(`<html><head><style>${document.head.innerHTML}</style></head><body>${html}</body></html>`);
         w.document.close();
         setTimeout(() => w.print(), 1000);
+    }
+
+    async function registerStudent() {
+        const data = [document.getElementById('rName').value, "MRS. "+document.getElementById('rMother').value, "MR. "+document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rSR').value, document.getElementById('rDOB').value.split("-").reverse().join("/")];
+        await fetch(API, { method:"POST", body: JSON.stringify({action:"registerStudent", data: data}) });
+        alert("Registered!"); sync();
     }
 </script>
 </body>
