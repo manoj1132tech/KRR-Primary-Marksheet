@@ -21,11 +21,13 @@
         input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; width: 100%; box-sizing: border-box; text-transform: uppercase; }
         
         .btn-save { background: #2e7d32; color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-
+        
         table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: var(--blue); color: white; }
+
+        .list-item { background: #f9f9f9; padding: 10px; border: 1px solid #ddd; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-edit-small { background: var(--blue); color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
 
         @media print { .no-print { display: none; } }
     </style>
@@ -35,8 +37,8 @@
 <div class="nav-bar no-print">
     <h2 style="color:white; border:none; margin:5px 0;">K.R.R. JUNIOR SCHOOL</h2>
     <button class="nav-btn active" onclick="openPage('regPage')">REGISTRATION</button>
-    <button class="nav-btn" onclick="openPage('editPage')">EDIT DETAILS</button>
-    <button class="nav-btn" onclick="openPage('marksPage')">MARKS ENTRY</button>
+    <button class="nav-btn" onclick="loadEditList()">EDIT DETAILS</button>
+    <button class="nav-btn" onclick="loadMarksList()">MARKS ENTRY</button>
     <button class="nav-btn" onclick="openPage('adminPage')">ADMIN PANEL</button>
 </div>
 
@@ -60,14 +62,12 @@
 
     <div id="editPage" class="page">
         <h2>Edit Student Details</h2>
-        <p>Loading database... select a student to edit.</p>
-        <div id="editList"></div>
+        <div id="editContainer">Loading students...</div>
     </div>
 
     <div id="marksPage" class="page">
         <h2>Marks Entry</h2>
-        <p>Select class to enter marks.</p>
-        <div id="marksList"></div>
+        <div id="marksContainer">Select a student from the list to enter marks.</div>
     </div>
 
     <div id="adminPage" class="page">
@@ -81,7 +81,6 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
-    // Initialize Date Selects
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i, i<10?'0'+i:i));
     ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=>document.getElementById('dobM').add(new Option(m, i+1<10?'0'+(i+1):i+1)));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
@@ -91,23 +90,39 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
-        // Highlight active button
-        const btns = document.querySelectorAll('.nav-btn');
-        btns.forEach(btn => {
-            if(btn.innerText.includes(id.replace('Page','').toUpperCase())) btn.classList.add('active');
-        });
-        
-        sync();
+        const targetBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.includes(id.replace('Page','').toUpperCase()));
+        if(targetBtn) targetBtn.classList.add('active');
     }
 
     async function sync() { 
         try { 
             const res = await fetch(API); 
             MASTER = await res.json(); 
-            console.log("Data Synced", MASTER);
-        } catch(e){ 
-            console.error("Sync Error", e); 
-        } 
+        } catch(e){ console.error("Sync Error", e); } 
+    }
+
+    function loadEditList() {
+        openPage('editPage');
+        const cont = document.getElementById('editContainer');
+        if(MASTER.length <= 1) { cont.innerHTML = "No data found."; return; }
+        cont.innerHTML = MASTER.slice(1).map((r, i) => `
+            <div class="list-item">
+                <span>${r[0]} (${r[3]})</span>
+                <button class="btn-edit-small" onclick="alert('Edit logic for row '+(i+2))">EDIT</button>
+            </div>
+        `).join('');
+    }
+
+    function loadMarksList() {
+        openPage('marksPage');
+        const cont = document.getElementById('marksContainer');
+        if(MASTER.length <= 1) { cont.innerHTML = "No data found."; return; }
+        cont.innerHTML = MASTER.slice(1).map((r, i) => `
+            <div class="list-item">
+                <span>ROLL: ${r[4]} - ${r[0]}</span>
+                <button class="btn-edit-small" onclick="alert('Enter Marks for '+r[0])">ENTER MARKS</button>
+            </div>
+        `).join('');
     }
 
     async function register() {
@@ -145,7 +160,7 @@
     }
 
     function printAll() {
-        if(MASTER.length === 0) { alert("Data still loading from server. Please wait..."); return; }
+        if(MASTER.length === 0) { alert("Data loading..."); return; }
         const cls = document.getElementById('pClass').value;
         let content = '';
         
@@ -192,14 +207,14 @@
                             <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">PROGRESS REPORT</div>
                         </center>
 
-                        <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:12px; border-radius:12px; font-size:18px; border-collapse:separate; border-spacing:0 8px;">
+                        <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:8px; border-radius:12px; font-size:13px; border-collapse:separate; border-spacing:0 4px;">
                             <tr>
-                                <td style="color:black; font-weight:bold;">Student name: <span style="color:#b71c1c; text-transform:uppercase;">${r[0]}</span></td>
+                                <td style="color:black; font-weight:bold;">Student name: <span style="color:#b71c1c;">${r[0]}</span></td>
                                 <td style="color:black; font-weight:bold;">Roll no: <span>${r[4]}</span></td>
                             </tr>
                             <tr>
-                                <td style="color:black; font-weight:bold;">Father's name: <span style="color:#0d47a1; text-transform:uppercase;">Mr. ${r[2]}</span></td>
-                                <td style="color:black; font-weight:bold;">Mother's name: <span style="color:#0d47a1; text-transform:uppercase;">Mrs. ${r[1]}</span></td>
+                                <td style="color:black; font-weight:bold;">Father's name: <span style="color:#0d47a1;">MR. ${r[2]}</span></td>
+                                <td style="color:black; font-weight:bold;">Mother's name: <span style="color:#0d47a1;">MRS. ${r[1]}</span></td>
                             </tr>
                             <tr>
                                 <td style="color:black; font-weight:bold;">Class: <span>${r[3]}</span></td>
@@ -216,15 +231,15 @@
                             <tbody>${rows}</tbody>
                         </table>
 
-                        <div style="margin-top:15px; border:2px solid #8e6d05; padding:10px; display:grid; grid-template-columns:1fr 1fr 1fr; font-weight:bold; background:#fff9e6; border-radius:8px;">
-                            <div>TOTAL: <span style="color:#b71c1c;">${grand}/600</span></div>
-                            <div style="text-align:center;">PERCENTAGE: <span style="color:#0d47a1;">${perc}%</span></div>
-                            <div style="text-align:right;">RESULT: <span style="color:#b71c1c;">${resultStatus}</span></div>
+                        <div style="margin-top:15px; border:2px solid #8e6d05; padding:10px; display:grid; grid-template-columns:1fr 1fr 1fr; font-weight:bold; background:#fff9e6; border-radius:8px; font-size:14px;">
+                            <div>Total: <span style="color:#b71c1c;">${grand}/600</span></div>
+                            <div style="text-align:center;">Percentage: <span style="color:#0d47a1;">${perc}%</span></div>
+                            <div style="text-align:right;">Result: <span style="color:#b71c1c;">${resultStatus}</span></div>
                         </div>
 
-                        <div style="margin-top:10px; border:1px solid #0d47a1; padding:10px; border-radius:8px; background:#f0f7ff;">
-                            <div style="color:#0d47a1; font-weight:bold;">Teacher's Remarks: <span style="color:#b71c1c;">${remarks}</span></div>
-                            <div style="color:#0d47a1; font-weight:bold;">Promoted to Class: <span style="color:#2e7d32;">${promoted}</span></div>
+                        <div style="margin-top:10px; border:1px solid #0d47a1; padding:10px; border-radius:8px; background:#f0f7ff; font-size:14px;">
+                            <div style="color:#0d47a1; font-weight:bold;">Teacher's remarks: <span style="color:#b71c1c;">${remarks}</span></div>
+                            <div style="color:#0d47a1; font-weight:bold;">Promoted to class: <span style="color:#2e7d32;">${promoted}</span></div>
                         </div>
 
                         <div style="margin-top:55px; display:flex; justify-content:space-between; padding:0 10px;">
@@ -236,15 +251,13 @@
             }
         });
         
-        if(content === '') { alert("No students found in selected class!"); return; }
-
+        if(content === '') { alert("No students found!"); return; }
         const win = window.open('', '_blank');
         win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0; text-transform:uppercase;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
     
-    // Initial Sync
     sync();
 </script>
 </body>
