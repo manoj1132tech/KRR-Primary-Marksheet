@@ -58,6 +58,18 @@
         <button class="btn-save" onclick="register()">SAVE STUDENT DATA</button>
     </div>
 
+    <div id="editPage" class="page">
+        <h2>Edit Student Details</h2>
+        <p>Loading database... select a student to edit.</p>
+        <div id="editList"></div>
+    </div>
+
+    <div id="marksPage" class="page">
+        <h2>Marks Entry</h2>
+        <p>Select class to enter marks.</p>
+        <div id="marksList"></div>
+    </div>
+
     <div id="adminPage" class="page">
         <h2>Generate Reports</h2>
         <select id="pClass"><option>N.C</option><option>LKG</option><option>UKG</option></select>
@@ -69,6 +81,7 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
+    // Initialize Date Selects
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i, i<10?'0'+i:i));
     ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=>document.getElementById('dobM').add(new Option(m, i+1<10?'0'+(i+1):i+1)));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
@@ -77,10 +90,25 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
+        // Highlight active button
+        const btns = document.querySelectorAll('.nav-btn');
+        btns.forEach(btn => {
+            if(btn.innerText.includes(id.replace('Page','').toUpperCase())) btn.classList.add('active');
+        });
+        
         sync();
     }
 
-    async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e){ console.error("Sync Error", e); } }
+    async function sync() { 
+        try { 
+            const res = await fetch(API); 
+            MASTER = await res.json(); 
+            console.log("Data Synced", MASTER);
+        } catch(e){ 
+            console.error("Sync Error", e); 
+        } 
+    }
 
     async function register() {
         const d = document.getElementById('dobD').value, m = document.getElementById('dobM').value, y = document.getElementById('dobY').value;
@@ -117,8 +145,10 @@
     }
 
     function printAll() {
+        if(MASTER.length === 0) { alert("Data still loading from server. Please wait..."); return; }
         const cls = document.getElementById('pClass').value;
         let content = '';
+        
         MASTER.forEach((r, i) => {
             if(i > 0 && r[3] === cls) {
                 let m = {}; try { m = JSON.parse(r[6] || "{}"); } catch(e) {}
@@ -154,13 +184,8 @@
 
                 content += `
                 <div style="width:190mm; height:277mm; padding:10mm; margin:5mm auto; border:10px double #0d47a1; box-sizing:border-box; page-break-after:always; position:relative; background:white;">
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.1; z-index:0;">
-                        ${Array.from({length: 40}).map(() => `<span style="position:absolute; top:${Math.random()*95}%; left:${Math.random()*95}%; font-size:25px;">🌸</span>`).join('')}
-                    </div>
-
                     <div style="position:relative; z-index:1;">
                         <center>
-                            <img src="logo.jpg" style="width:70px; height:70px; margin-bottom:5px;" onerror="this.style.display='none'">
                             <h1 style="color:#b71c1c; margin:0; font-size:28px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                             <p style="margin:2px 0; font-weight:bold; font-size:12px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                             <h3 style="color:#8e6d05; margin:5px 0;">ACADEMIC SESSION: 2025-2026</h3>
@@ -169,22 +194,22 @@
 
                         <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:12px; border-radius:12px; font-size:18px; border-collapse:separate; border-spacing:0 8px;">
                             <tr>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Student name: <span style="color:#b71c1c; font-size:16px; text-transform:uppercase;">${r[0]}</span></td>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Roll no: <span style="color:#333; font-size:16px;">${r[4]}</span></td>
+                                <td style="color:black; font-weight:bold;">Student name: <span style="color:#b71c1c; text-transform:uppercase;">${r[0]}</span></td>
+                                <td style="color:black; font-weight:bold;">Roll no: <span>${r[4]}</span></td>
                             </tr>
                             <tr>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Father's name: <span style="color:#0d47a1; font-size:16px; text-transform:uppercase;">Mr. ${r[2]}</span></td>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Mother's name: <span style="color:#0d47a1; font-size:16px; text-transform:uppercase;">Mrs. ${r[1]}</span></td>
+                                <td style="color:black; font-weight:bold;">Father's name: <span style="color:#0d47a1; text-transform:uppercase;">Mr. ${r[2]}</span></td>
+                                <td style="color:black; font-weight:bold;">Mother's name: <span style="color:#0d47a1; text-transform:uppercase;">Mrs. ${r[1]}</span></td>
                             </tr>
                             <tr>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Class: <span style="color:#333; font-size:16px;">${r[3]}</span></td>
-                                <td style="color:black; font-weight:bold;">D.O.B: <span style="color:#333; font-size:16px;">${r[5]}</span></td>
+                                <td style="color:black; font-weight:bold;">Class: <span>${r[3]}</span></td>
+                                <td style="color:black; font-weight:bold;">D.O.B: <span>${r[5]}</span></td>
                             </tr>
                         </table>
 
                         <table border="1" style="width:100%; text-align:center; border-collapse:collapse; font-size:12px; border:2px solid #0d47a1;">
                             <thead>
-                                <tr style="background: linear-gradient(180deg, #0d47a1 0%, #002171 100%); color:white; height:35px;">
+                                <tr style="background:#0d47a1; color:white; height:35px;">
                                     <th>SUBJECTS</th><th>UT-1</th><th>HY</th><th>UT-2</th><th>ANNUAL</th><th>TOTAL</th><th>GRADE</th>
                                 </tr>
                             </thead>
@@ -198,27 +223,28 @@
                         </div>
 
                         <div style="margin-top:10px; border:1px solid #0d47a1; padding:10px; border-radius:8px; background:#f0f7ff;">
-                            <div style="color:#0d47a1; font-weight:bold; margin-bottom:5px;">Teacher's Remarks: <span style="color:#b71c1c; font-weight:bold;">${remarks}</span></div>
-                            <div style="color:#0d47a1; font-weight:bold;">Promoted to Class: <span style="color:#2e7d32; font-weight:bold;">${promoted}</span></div>
+                            <div style="color:#0d47a1; font-weight:bold;">Teacher's Remarks: <span style="color:#b71c1c;">${remarks}</span></div>
+                            <div style="color:#0d47a1; font-weight:bold;">Promoted to Class: <span style="color:#2e7d32;">${promoted}</span></div>
                         </div>
 
                         <div style="margin-top:55px; display:flex; justify-content:space-between; padding:0 10px;">
                             <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px; font-weight:bold; padding-top:5px;">CLASS TEACHER</span>
                             <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px; font-weight:bold; padding-top:5px;">PRINCIPAL SIGN</span>
                         </div>
-
-                        <div style="text-align:center; margin-top:40px; color:#b71c1c; font-size:22px;">
-                             🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸
-                        </div>
                     </div>
                 </div>`;
             }
         });
+        
+        if(content === '') { alert("No students found in selected class!"); return; }
+
         const win = window.open('', '_blank');
         win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0; text-transform:uppercase;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
+    
+    // Initial Sync
     sync();
 </script>
 </body>
