@@ -154,15 +154,15 @@
 
                 content += `
                 <div style="width:190mm; height:277mm; padding:10mm; margin:5mm auto; border:10px double #0d47a1; box-sizing:border-box; page-break-after:always; position:relative; background:white;">
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.1; z-index:0;">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.20; z-index:0;">
                         ${Array.from({length: 40}).map(() => `<span style="position:absolute; top:${Math.random()*95}%; left:${Math.random()*95}%; font-size:25px;">🌸</span>`).join('')}
                     </div>
 
                     <div style="position:relative; z-index:1;">
                         <center>
-                            <img src="logo.jpg" style="width:70px; height:70px; margin-bottom:5px;" onerror="this.style.display='none'">
-                            <h1 style="color:#b71c1c; margin:0; font-size:28px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:2px 0; font-weight:bold; font-size:12px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+                            <img src="logo.jpg" style="width:75px; height:75px; margin-bottom:5px;" onerror="this.style.display='none'">
+                            <h1 style="color:#b71c1c; margin:0; font-size:32px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                            <p style="margin:2px 0; font-weight:bold; font-size:13px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                             <h3 style="color:#8e6d05; margin:5px 0;">ACADEMIC SESSION: 2025-2026</h3>
                             <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">PROGRESS REPORT</div>
                         </center>
@@ -170,15 +170,15 @@
                         <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:12px; border-radius:12px; font-size:18px; border-collapse:separate; border-spacing:0 8px;">
                             <tr>
                                 <td style="color:black; font-weight:bold; text-transform:none;">Student name: <span style="color:#b71c1c; font-size:16px; text-transform:uppercase;">${r[0]}</span></td>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Roll no: <span style="color:#333; font-size:16px;">${r[4]}</span></td>
+                                <td style="color:black; font-weight:bold; text-transform:none;">Roll no: <span style="color:#0d47a1; font-size:16px;">${r[4]}</span></td>
                             </tr>
                             <tr>
                                 <td style="color:black; font-weight:bold; text-transform:none;">Father's name: <span style="color:#0d47a1; font-size:16px; text-transform:uppercase;">Mr. ${r[2]}</span></td>
                                 <td style="color:black; font-weight:bold; text-transform:none;">Mother's name: <span style="color:#0d47a1; font-size:16px; text-transform:uppercase;">Mrs. ${r[1]}</span></td>
                             </tr>
                             <tr>
-                                <td style="color:black; font-weight:bold; text-transform:none;">Class: <span style="color:#333; font-size:16px;">${r[3]}</span></td>
-                                <td style="color:black; font-weight:bold;">D.O.B: <span style="color:#333; font-size:16px;">${r[5]}</span></td>
+                                <td style="color:black; font-weight:bold; text-transform:none;">Class: <span style="color:#b71c1c; font-size:16px;">${r[3]}</span></td>
+                                <td style="color:black; font-weight:bold;">D.O.B: <span style="color:#0d47a1; font-size:16px;">${r[5]}</span></td>
                             </tr>
                         </table>
 
