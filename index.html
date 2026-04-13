@@ -27,6 +27,8 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: var(--blue); color: white; }
 
+        .marks-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.5fr; gap: 10px; margin-bottom: 10px; align-items: center; }
+
         @media print { .no-print { display: none; } }
     </style>
 </head>
@@ -58,6 +60,32 @@
         <button class="btn-save" onclick="register()">SAVE STUDENT DATA</button>
     </div>
 
+    <div id="editPage" class="page">
+        <h2>Edit Student Details</h2>
+        <select id="eSelect" onchange="loadEditData()"><option value="">SELECT STUDENT TO EDIT</option></select>
+        <div class="form-grid" style="margin-top:20px;">
+            <input type="text" id="eName" placeholder="STUDENT NAME">
+            <input type="text" id="eMother" placeholder="MOTHER'S NAME">
+            <input type="text" id="eFather" placeholder="FATHER'S NAME">
+            <input type="text" id="eRoll" placeholder="ROLL NO">
+            <select id="eClass"><option>N.C</option><option>LKG</option><option>UKG</option></select>
+            <input type="text" id="eDob" placeholder="DOB (DD/MM/YYYY)">
+        </div>
+        <button class="btn-save" onclick="updateStudent()">UPDATE DETAILS</button>
+    </div>
+
+    <div id="marksPage" class="page">
+        <h2>Marks Entry</h2>
+        <select id="mSelect" onchange="loadMarksData()"><option value="">SELECT STUDENT</option></select>
+        <div id="marksForm" style="margin-top:20px;">
+            <div class="marks-row" style="font-weight:bold; color:var(--blue);">
+                <div>SUBJECT</div><div>UT1</div><div>HY</div><div>UT2</div><div>ANN</div><div>GRADE</div>
+            </div>
+            <div id="subjectInputs"></div>
+        </div>
+        <button class="btn-save" onclick="saveMarks()">SAVE MARKS</button>
+    </div>
+
     <div id="adminPage" class="page">
         <h2>Generate Reports</h2>
         <select id="pClass"><option>N.C</option><option>LKG</option><option>UKG</option></select>
@@ -68,7 +96,10 @@
 <script>
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
+    const SUBS = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
+    const GRADESUBS = ["STORY TELLING", "PHYSICAL ACTIVITY"];
 
+    // Init DOB
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i, i<10?'0'+i:i));
     ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=>document.getElementById('dobM').add(new Option(m, i+1<10?'0'+(i+1):i+1)));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
@@ -77,17 +108,105 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
         sync();
     }
 
-    async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e){ console.error("Sync Error", e); } }
+    async function sync() {
+        try {
+            const res = await fetch(API);
+            MASTER = await res.json();
+            const selects = ['eSelect', 'mSelect'];
+            selects.forEach(sId => {
+                const el = document.getElementById(sId);
+                el.innerHTML = '<option value="">SELECT STUDENT</option>';
+                MASTER.forEach((r, i) => {
+                    if(i > 0) el.add(new Option(`${r[0]} (ROLL: ${r[4]})`, i));
+                });
+            });
+            renderMarksInputs();
+        } catch(e){ console.error("Sync Error", e); }
+    }
+
+    function renderMarksInputs() {
+        let html = '';
+        SUBS.forEach(s => {
+            html += `<div class="marks-row">
+                <div style="font-size:12px;">${s}</div>
+                <input type="number" id="m_${s}_UT1" placeholder="25">
+                <input type="number" id="m_${s}_HY" placeholder="100">
+                <input type="number" id="m_${s}_UT2" placeholder="25">
+                <input type="number" id="m_${s}_AN" placeholder="100">
+                <div>-</div>
+            </div>`;
+        });
+        GRADESUBS.forEach(s => {
+            html += `<div class="marks-row">
+                <div style="font-size:12px;">${s}</div>
+                <div>-</div><div>-</div><div>-</div><div>-</div>
+                <input type="text" id="m_${s}_GRADE" placeholder="A+">
+            </div>`;
+        });
+        document.getElementById('subjectInputs').innerHTML = html;
+    }
 
     async function register() {
         const d = document.getElementById('dobD').value, m = document.getElementById('dobM').value, y = document.getElementById('dobY').value;
         if(!d || !m || !y) { alert("SELECT FULL DATE"); return; }
-        const data = [document.getElementById('rName').value, document.getElementById('rMother').value, document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rRoll').value, `${d}/${m}/${y}`];
+        const data = [document.getElementById('rName').value, document.getElementById('rMother').value, document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rRoll').value, `${d}/${m}/${y}`, "{}"];
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "appendStudent", rowData: data}) });
         alert("SAVED!"); sync();
+    }
+
+    function loadEditData() {
+        const idx = document.getElementById('eSelect').value;
+        if(!idx) return;
+        const r = MASTER[idx];
+        document.getElementById('eName').value = r[0];
+        document.getElementById('eMother').value = r[1];
+        document.getElementById('eFather').value = r[2];
+        document.getElementById('eClass').value = r[3];
+        document.getElementById('eRoll').value = r[4];
+        document.getElementById('eDob').value = r[5];
+    }
+
+    async function updateStudent() {
+        const idx = document.getElementById('eSelect').value;
+        const data = [document.getElementById('eName').value, document.getElementById('eMother').value, document.getElementById('eFather').value, document.getElementById('eClass').value, document.getElementById('eRoll').value, document.getElementById('eDob').value];
+        await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateStudent", rowIndex: idx, rowData: data}) });
+        alert("UPDATED!"); sync();
+    }
+
+    function loadMarksData() {
+        const idx = document.getElementById('mSelect').value;
+        if(!idx) return;
+        let m = {}; try { m = JSON.parse(MASTER[idx][6] || "{}"); } catch(e){}
+        SUBS.forEach(s => {
+            document.getElementById(`m_${s}_UT1`).value = m[s+'_UT1'] || '';
+            document.getElementById(`m_${s}_HY`).value = m[s+'_HY'] || '';
+            document.getElementById(`m_${s}_UT2`).value = m[s+'_UT2'] || '';
+            document.getElementById(`m_${s}_AN`).value = m[s+'_AN'] || '';
+        });
+        GRADESUBS.forEach(s => {
+            document.getElementById(`m_${s}_GRADE`).value = m[s+'_GRADE'] || '';
+        });
+    }
+
+    async function saveMarks() {
+        const idx = document.getElementById('mSelect').value;
+        if(!idx) return;
+        let m = {};
+        SUBS.forEach(s => {
+            m[s+'_UT1'] = document.getElementById(`m_${s}_UT1`).value;
+            m[s+'_HY'] = document.getElementById(`m_${s}_HY`).value;
+            m[s+'_UT2'] = document.getElementById(`m_${s}_UT2`).value;
+            m[s+'_AN'] = document.getElementById(`m_${s}_AN`).value;
+        });
+        GRADESUBS.forEach(s => {
+            m[s+'_GRADE'] = document.getElementById(`m_${s}_GRADE`).value;
+        });
+        await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateMarks", rowIndex: idx, marksData: JSON.stringify(m)}) });
+        alert("MARKS SAVED!"); sync();
     }
 
     function getStars(total) {
@@ -123,9 +242,8 @@
             if(i > 0 && r[3] === cls) {
                 let m = {}; try { m = JSON.parse(r[6] || "{}"); } catch(e) {}
                 let grand = 0;
-                let subs = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
                 
-                let rows = subs.map((s, idx) => {
+                let rows = SUBS.map((s, idx) => {
                     let u1 = parseInt(m[s+'_UT1']||0), h = parseInt(m[s+'_HY']||0), u2 = parseInt(m[s+'_UT2']||0), a = parseInt(m[s+'_AN']||0);
                     let t = u1 + h + u2 + a; grand += t;
                     let bg = idx % 2 === 0 ? '#ffffff' : '#f2f7ff';
@@ -137,8 +255,7 @@
                     </tr>`;
                 }).join('');
 
-                const gradeSubs = ["STORY TELLING", "PHYSICAL ACTIVITY"];
-                gradeSubs.forEach(s => {
+                GRADESUBS.forEach(s => {
                     rows += `<tr style="height:35px; background:white;">
                         <td style="color:#0d47a1; font-weight:bold; text-align:left; padding-left:15px; border-left:5px solid #0d47a1;">${s}</td>
                         <td colspan="4" style="color:#8e6d05; font-size:12px; font-weight:bold; background:#fffcf0;">GRADE BASED ASSESSMENT</td>
@@ -161,8 +278,8 @@
                     <div style="position:relative; z-index:1;">
                         <center>
                             <img src="logo.jpg" style="width:75px; height:75px; margin-bottom:5px;" onerror="this.style.display='none'">
-                            <h1 style="color:#b71c1c; margin:0; font-size:32px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:2px 0; font-weight:bold; font-size:13px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+                            <h1 style="color:#b71c1c; margin:0; font-size:36px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                            <p style="margin:2px 0; font-weight:bold; font-size:14px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                             <h3 style="color:#8e6d05; margin:5px 0;">ACADEMIC SESSION: 2025-2026</h3>
                             <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">PROGRESS REPORT</div>
                         </center>
@@ -205,10 +322,6 @@
                         <div style="margin-top:55px; display:flex; justify-content:space-between; padding:0 10px;">
                             <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px; font-weight:bold; padding-top:5px;">CLASS TEACHER</span>
                             <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px; font-weight:bold; padding-top:5px;">PRINCIPAL SIGN</span>
-                        </div>
-
-                        <div style="text-align:center; margin-top:40px; color:#b71c1c; font-size:22px;">
-                             🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸
                         </div>
                     </div>
                 </div>`;
