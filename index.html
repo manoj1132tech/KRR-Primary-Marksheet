@@ -115,7 +115,6 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
-    // Date init
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i, i<10?'0'+i:i));
     ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=>document.getElementById('dobM').add(new Option(m, i+1<10?'0'+(i+1):i+1)));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
@@ -212,6 +211,21 @@
         return n < 10 ? '0' + n : n;
     }
 
+    function getRemarks(total) {
+        if(total >= 510) return "EXCELLENT PERFORMANCE!";
+        if(total >= 420) return "VERY GOOD WORK!";
+        if(total >= 330) return "GOOD, KEEP IMPROVING.";
+        if(total >= 210) return "SATISFACTORY, WORK HARDER.";
+        return "POOR, NEEDS SPECIAL ATTENTION.";
+    }
+
+    function getNextClass(current) {
+        if(current === "NURSERY") return "LKG";
+        if(current === "LKG") return "UKG";
+        if(current === "UKG") return "1st";
+        return "-";
+    }
+
     function printAll() {
         const cls = document.getElementById('pClass').value;
         let content = '';
@@ -244,6 +258,9 @@
                 });
 
                 let perc = ((grand / 600) * 100).toFixed(2);
+                let resultStatus = grand >= 210 ? 'PASSED' : 'FAILED';
+                let remarks = getRemarks(grand);
+                let promoted = resultStatus === 'PASSED' ? getNextClass(r[3]) : 'RETAINED';
 
                 content += `
                 <div style="width:190mm; height:277mm; padding:10mm; margin:5mm auto; border:10px double #0d47a1; box-sizing:border-box; page-break-after:always; position:relative; background:white;">
@@ -260,10 +277,10 @@
                             <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">PROGRESS REPORT</div>
                         </center>
 
-                        <table style="width:100%; margin:15px 0; border:1px solid #0d47a1; padding:8px; border-radius:10px; font-size:14px;">
-                            <tr><td>NAME: <b>${r[0]}</b></td><td>ROLL NO: <b>${r[4]}</b></td></tr>
-                            <tr><td>FATHER: <b>MR. ${r[2]}</b></td><td>MOTHER: <b>MRS. ${r[1]}</b></td></tr>
-                            <tr><td>CLASS: <b>${r[3]}</b></td><td>D.O.B: <b>${r[5]}</b></td></tr>
+                        <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:12px; border-radius:12px; font-size:18px; border-collapse:separate; border-spacing:0 8px;">
+                            <tr><td style="color:#0d47a1; font-weight:bold;">NAME: <span style="color:#b71c1c; font-size:20px;">${r[0]}</span></td><td style="color:#0d47a1; font-weight:bold;">ROLL NO: <span style="color:#333;">${r[4]}</span></td></tr>
+                            <tr><td style="color:#0d47a1; font-weight:bold;">FATHER: <span style="color:#333;">MR. ${r[2]}</span></td><td style="color:#0d47a1; font-weight:bold;">MOTHER: <span style="color:#333;">MRS. ${r[1]}</span></td></tr>
+                            <tr><td style="color:#0d47a1; font-weight:bold;">CLASS: <span style="color:#333;">${r[3]}</span></td><td style="color:#0d47a1; font-weight:bold;">D.O.B: <span style="color:#333;">${r[5]}</span></td></tr>
                         </table>
 
                         <table border="1" style="width:100%; text-align:center; border-collapse:collapse; font-size:12px; border:2px solid #0d47a1;">
@@ -278,7 +295,12 @@
                         <div style="margin-top:15px; border:2px solid #8e6d05; padding:10px; display:grid; grid-template-columns:1fr 1fr 1fr; font-weight:bold; background:#fff9e6; border-radius:8px;">
                             <div>TOTAL: <span style="color:#b71c1c;">${grand}/600</span></div>
                             <div style="text-align:center;">PERCENTAGE: <span style="color:#0d47a1;">${perc}%</span></div>
-                            <div style="text-align:right;">RESULT: <span style="color:#b71c1c;">${grand >= 210 ? 'PASSED' : 'FAILED'}</span></div>
+                            <div style="text-align:right;">RESULT: <span style="color:#b71c1c;">${resultStatus}</span></div>
+                        </div>
+
+                        <div style="margin-top:10px; border:1px solid #0d47a1; padding:10px; border-radius:8px; background:#f0f7ff;">
+                            <div style="color:#0d47a1; font-weight:bold; margin-bottom:5px;">TEACHER'S REMARKS: <span style="color:#b71c1c; font-weight:bold;">${remarks}</span></div>
+                            <div style="color:#0d47a1; font-weight:bold;">PROMOTED TO CLASS: <span style="color:#2e7d32; font-weight:bold;">${promoted}</span></div>
                         </div>
 
                         <div style="margin-top:40px; display:flex; justify-content:space-between; padding:0 10px;">
@@ -286,8 +308,10 @@
                             <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px;">PRINCIPAL SIGN</span>
                         </div>
 
-                        <div style="text-align:center; margin-top:30px; color:#8e6d05; font-size:18px; letter-spacing:5px;">
-                            ✿⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯✿
+                        <div style="text-align:center; margin-top:30px; color:#8e6d05; font-size:18px;">
+                            <div style="width:80%; margin:0 auto; border-top:2px solid #8e6d05; padding-top:5px;">
+                                ❀꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵꠵❀
+                            </div>
                         </div>
                     </div>
                 </div>`;
