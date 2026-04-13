@@ -24,12 +24,10 @@
         
         .dob-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
         .btn-save { background: #2e7d32; color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-save:hover { background: #1b5e20; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: var(--blue); color: white; }
-        .action-btn { background: var(--gold); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
 
         @media print { .no-print { display: none; } }
     </style>
@@ -69,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <button class="btn-save" id="regBtn" onclick="register()">SAVE STUDENT DATA</button>
+        <button class="btn-save" onclick="register()">SAVE STUDENT DATA</button>
     </div>
 
     <div id="editPage" class="page">
@@ -131,18 +129,61 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
-    // DOB Init
+    // Init Date selects
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i<10?'0'+i:i, i<10?'0'+i:i));
-    const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-    months.forEach((m,i)=> document.getElementById('dobM').add(new Option(m, (i+1)<10?'0'+(i+1):(i+1))));
+    ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=> document.getElementById('dobM').add(new Option(m, (i+1)<10?'0'+(i+1):(i+1))));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i,i));
 
     async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e){} }
+    
     function openPage(id) { 
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
         document.getElementById(id).classList.add('active');
         sync();
+    }
+
+    async function register() {
+        const data = {
+            method: 'register',
+            name: document.getElementById('rName').value,
+            mother: document.getElementById('rMother').value,
+            father: document.getElementById('rFather').value,
+            class: document.getElementById('rClass').value,
+            roll: document.getElementById('rRoll').value,
+            dob: `${document.getElementById('dobD').value}/${document.getElementById('dobM').value}/${document.getElementById('dobY').value}`
+        };
+        await fetch(API, { method: 'POST', body: JSON.stringify(data) });
+        alert("Student Registered!");
+        sync();
+    }
+
+    function loadEditTable() {
+        const cls = document.getElementById('eClass').value;
+        let html = '<table><tr><th>Name</th><th>Father</th><th>Roll</th><th>Action</th></tr>';
+        MASTER.forEach((r, i) => {
+            if(i>0 && r[3] === cls) html += `<tr><td>${r[0]}</td><td>${r[2]}</td><td>${r[4]}</td><td><button onclick="editRow(${i})">Edit</button></td></tr>`;
+        });
+        document.getElementById('editArea').innerHTML = html + '</table>';
+    }
+
+    function filterStudents() {
+        const cls = document.getElementById('mClass').value;
+        const sel = document.getElementById('mStudent');
+        sel.innerHTML = '<option value="">-- SELECT STUDENT --</option>';
+        MASTER.forEach((r, i) => {
+            if(i>0 && r[3] === cls) sel.add(new Option(r[0], i));
+        });
+    }
+
+    function showStudentDetail() {
+        const idx = document.getElementById('mStudent').value;
+        if(!idx) return;
+        const r = MASTER[idx];
+        document.getElementById('mDetailBox').style.display = 'block';
+        document.getElementById('mDetailBox').innerHTML = `<b>STUDENT:</b> ${r[0]} | <b>ROLL:</b> ${r[4]}`;
+        document.getElementById('marksForm').style.display = 'block';
     }
 
     function handleSubjectChange() {
@@ -150,6 +191,24 @@
         const isGrade = (sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY");
         document.getElementById('normalMarks').style.display = isGrade ? "none" : "grid";
         document.getElementById('gradeMarks').style.display = isGrade ? "block" : "none";
+    }
+
+    async function saveMarks() {
+        const idx = document.getElementById('mStudent').value;
+        const sub = document.getElementById('mSub').value;
+        let marks = {};
+        if(sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY") {
+            marks[sub + '_TOTAL'] = document.getElementById('gVal').value;
+        } else {
+            marks[sub + '_UT1'] = document.getElementById('v1').value;
+            marks[sub + '_HY'] = document.getElementById('v2').value;
+            marks[sub + '_UT2'] = document.getElementById('v3').value;
+            marks[sub + '_AN'] = document.getElementById('v4').value;
+        }
+        const data = { method: 'updateMarks', index: idx, marks: marks };
+        await fetch(API, { method: 'POST', body: JSON.stringify(data) });
+        alert("Marks Updated!");
+        sync();
     }
 
     function getGradeStars(score) {
@@ -184,7 +243,6 @@
                     </tr>`;
                 }).join('');
 
-                // Add activity subjects
                 tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">STORY TELLING</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['STORY TELLING_TOTAL']||'-'}</td></tr>`;
                 tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
 
@@ -196,7 +254,7 @@
                 <div style="width:210mm; height:297mm; padding:15mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase;">
                     <center>
                         <img src="logo.jpg" style="height:80px; margin-bottom:5px;">
-                        <h1 style="color:#d32f2f; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                        <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="margin:5px 0; font-weight:bold; color:#000;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
                         <div style="border:2px solid #b8860b; padding:5px 30px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:15px; font-size:18px;">PROGRESS REPORT</div>
@@ -249,7 +307,7 @@
                     </div>
 
                     <div style="position:absolute; bottom:15mm; left:0; width:100%; text-align:center; font-size:28px; color:red;">
-                        ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
+                        ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
                     </div>
                 </div>`;
             }
