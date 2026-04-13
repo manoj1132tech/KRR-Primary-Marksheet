@@ -27,6 +27,8 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: var(--blue); color: white; }
 
+        .list-item { background: #f9f9f9; padding: 10px; border: 1px solid #ddd; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+
         @media print { .no-print { display: none; } }
     </style>
 </head>
@@ -35,8 +37,8 @@
 <div class="nav-bar no-print">
     <h2 style="color:white; border:none; margin:5px 0;">K.R.R. JUNIOR SCHOOL</h2>
     <button class="nav-btn active" onclick="openPage('regPage')">REGISTRATION</button>
-    <button class="nav-btn" onclick="openPage('editPage')">EDIT DETAILS</button>
-    <button class="nav-btn" onclick="openPage('marksPage')">MARKS ENTRY</button>
+    <button class="nav-btn" onclick="loadEditList()">EDIT DETAILS</button>
+    <button class="nav-btn" onclick="loadMarksList()">MARKS ENTRY</button>
     <button class="nav-btn" onclick="openPage('adminPage')">ADMIN PANEL</button>
 </div>
 
@@ -60,27 +62,18 @@
 
     <div id="editPage" class="page">
         <h2>Edit Student Details</h2>
-        <table id="editTable">
-            <thead>
-                <tr><th>NAME</th><th>CLASS</th><th>ROLL</th><th>ACTION</th></tr>
-            </thead>
-            <tbody id="editBody"></tbody>
-        </table>
+        <div id="editContainer">Loading students...</div>
     </div>
 
     <div id="marksPage" class="page">
         <h2>Marks Entry</h2>
-        <div id="marksForm" style="display:none; background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px;">
+        <div id="marksForm" style="display:none; background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid var(--blue);">
             <h3 id="currentStudentTitle" style="color:var(--red);"></h3>
             <div id="marksInputs" class="form-grid"></div>
             <button class="btn-save" onclick="saveMarks()">UPDATE MARKS</button>
+            <button class="btn-save" style="background:#666;" onclick="document.getElementById('marksForm').style.display='none'">CANCEL</button>
         </div>
-        <table id="marksTable">
-            <thead>
-                <tr><th>ROLL</th><th>NAME</th><th>CLASS</th><th>ACTION</th></tr>
-            </thead>
-            <tbody id="marksBody"></tbody>
-        </table>
+        <div id="marksContainer">Select a student from the list to enter marks.</div>
     </div>
 
     <div id="adminPage" class="page">
@@ -105,27 +98,37 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
-        // Find and highlight button
-        const btnText = id.replace('Page','').toUpperCase();
-        Array.from(document.querySelectorAll('.nav-btn')).forEach(btn => {
-            if(btn.innerText.includes(btnText)) btn.classList.add('active');
-        });
-        
-        if(id === 'editPage' || id === 'marksPage') loadTables();
+        const targetBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.includes(id.replace('Page','').toUpperCase()));
+        if(targetBtn) targetBtn.classList.add('active');
+        if(MASTER.length === 0) sync();
     }
 
     async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e){ console.error(e); } }
 
-    function loadTables() {
-        const eBody = document.getElementById('editBody');
-        const mBody = document.getElementById('marksBody');
-        eBody.innerHTML = ''; mBody.innerHTML = '';
+    // --- RESTORED EDIT LIST LOGIC ---
+    function loadEditList() {
+        openPage('editPage');
+        const cont = document.getElementById('editContainer');
+        if(MASTER.length <= 1) { cont.innerHTML = "Loading or No data found..."; sync().then(() => loadEditList()); return; }
+        cont.innerHTML = MASTER.slice(1).map((r, i) => `
+            <div class="list-item">
+                <span>${r[0]} (${r[3]}) - ROLL: ${r[4]}</span>
+                <button class="btn-edit" onclick="alert('Edit logic for row '+(i+2))">EDIT</button>
+            </div>
+        `).join('');
+    }
 
-        MASTER.slice(1).forEach((r, i) => {
-            const idx = i + 1;
-            eBody.innerHTML += `<tr><td>${r[0]}</td><td>${r[3]}</td><td>${r[4]}</td><td><button class="btn-edit" onclick="alert('Edit logic for ${r[0]}')">EDIT</button></td></tr>`;
-            mBody.innerHTML += `<tr><td>${r[4]}</td><td>${r[0]}</td><td>${r[3]}</td><td><button class="btn-edit" onclick="showMarksEntry(${idx})">MARKS</button></td></tr>`;
-        });
+    // --- RESTORED MARKS LIST LOGIC ---
+    function loadMarksList() {
+        openPage('marksPage');
+        const cont = document.getElementById('marksContainer');
+        if(MASTER.length <= 1) { cont.innerHTML = "Loading or No data found..."; sync().then(() => loadMarksList()); return; }
+        cont.innerHTML = MASTER.slice(1).map((r, i) => `
+            <div class="list-item">
+                <span>ROLL: ${r[4]} - ${r[0]} (${r[3]})</span>
+                <button class="btn-edit" onclick="showMarksEntry(${i+1})">ENTER MARKS</button>
+            </div>
+        `).join('');
     }
 
     function showMarksEntry(idx) {
@@ -140,7 +143,7 @@
 
         subs.forEach(s => {
             container.innerHTML += `
-                <div style="grid-column: span 2; font-weight:bold; color:var(--blue); margin-top:10px;">${s}</div>
+                <div style="grid-column: span 2; font-weight:bold; color:var(--blue); margin-top:10px; border-bottom:1px solid #ddd;">${s}</div>
                 <input type="number" id="${s}_UT1" placeholder="UT-1" value="${m[s+'_UT1']||''}">
                 <input type="number" id="${s}_HY" placeholder="HY" value="${m[s+'_HY']||''}">
                 <input type="number" id="${s}_UT2" placeholder="UT-2" value="${m[s+'_UT2']||''}">
@@ -150,7 +153,7 @@
         
         ["STORY TELLING", "PHYSICAL ACTIVITY"].forEach(s => {
             container.innerHTML += `
-                <div style="grid-column: span 1; font-weight:bold; color:var(--gold);">${s}</div>
+                <div style="grid-column: span 1; font-weight:bold; color:var(--gold); margin-top:10px;">${s}</div>
                 <input type="text" id="${s}_GRADE" placeholder="GRADE (A,B,C)" value="${m[s+'_GRADE']||''}">
             `;
         });
@@ -166,7 +169,9 @@
         inputs.forEach(inp => m[inp.id] = inp.value);
 
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateMarks", rowIndex: currentEditIdx + 1, marksData: JSON.stringify(m)}) });
-        alert("MARKS UPDATED!"); sync();
+        alert("MARKS UPDATED SUCCESSFULLY!"); 
+        document.getElementById('marksForm').style.display = 'none';
+        sync();
     }
 
     async function register() {
@@ -177,7 +182,7 @@
         alert("SAVED!"); sync();
     }
 
-    // --- Marksheet Print Logic (Unchanged as requested) ---
+    // --- MARKSHEET PRINT LOGIC (UNCHANGED) ---
     function getStars(total) {
         if(total >= 90) return '⭐⭐⭐⭐⭐';
         if(total >= 80) return '⭐⭐⭐⭐';
