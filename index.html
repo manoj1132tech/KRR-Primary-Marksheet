@@ -115,7 +115,6 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
-    // Init Date selects
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i, i<10?'0'+i:i));
     ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach((m,i)=>document.getElementById('dobM').add(new Option(m, i+1<10?'0'+(i+1):i+1)));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
@@ -202,6 +201,12 @@
         return '⭐';
     }
 
+    // Function to add leading zero
+    function fmt(val) {
+        let n = Number(val || 0);
+        return n < 10 ? '0' + n : n;
+    }
+
     function printAll() {
         const cls = document.getElementById('pClass').value;
         let content = '';
@@ -211,18 +216,18 @@
                 let grand = 0;
                 let subs = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
                 
-                let rows = subs.map(s => {
+                let rows = subs.map((s, idx) => {
                     let u1 = Number(m[s+'_UT1']||0), h = Number(m[s+'_HY']||0), u2 = Number(m[s+'_UT2']||0), a = Number(m[s+'_AN']||0);
                     let t = u1 + h + u2 + a; grand += t;
-                    return `<tr style="height:35px; background:white;">
+                    let bg = idx % 2 === 0 ? '#ffffff' : '#f9f9f9';
+                    return `<tr style="height:35px; background:${bg};">
                         <td style="color:#0d47a1; font-weight:bold; text-align:left; padding-left:15px; border-left:5px solid #0d47a1;">${s}</td>
-                        <td>${u1}</td><td>${h}</td><td>${u2}</td><td>${a}</td>
-                        <td style="font-weight:bold;">${t}</td>
+                        <td>${fmt(u1)}</td><td>${fmt(h)}</td><td>${fmt(u2)}</td><td>${fmt(a)}</td>
+                        <td style="font-weight:bold;">${fmt(t)}</td>
                         <td style="color:#b71c1c; font-size:11px;">${getStars(t)}</td>
                     </tr>`;
                 }).join('');
 
-                // Unified Grading Subjects Rows
                 const gradeSubs = ["STORY TELLING", "PHYSICAL ACTIVITY"];
                 gradeSubs.forEach(s => {
                     rows += `<tr style="height:35px; background:white;">
@@ -233,15 +238,17 @@
                     </tr>`;
                 });
 
+                let percentage = ((grand / 600) * 100).toFixed(2);
+
                 content += `
                 <div style="width:190mm; height:277mm; padding:10mm; margin:5mm auto; border:10px double #0d47a1; box-sizing:border-box; page-break-after:always; position:relative; overflow:hidden; background:white;">
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.40; z-index:0;">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.15; z-index:0;">
                         ${Array.from({length: 60}).map(() => `<span style="position:absolute; top:${Math.random()*95}%; left:${Math.random()*95}%; font-size:25px;">${['🦋','☀️','🌼','🌸'][Math.floor(Math.random()*4)]}</span>`).join('')}
                     </div>
 
                     <div style="position:relative; z-index:1;">
                         <center>
-                            <div style="font-size:45px; margin-bottom:5px; color:#0d47a1;">🎓</div>
+                            <img src="logo.jpg" alt="Logo" style="width:80px; height:80px; margin-bottom:5px;">
                             <h1 style="color:#b71c1c; margin:0; font-size:32px; text-shadow:1px 1px #ddd;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                             <p style="margin:2px 0; font-weight:bold; font-size:13px; color:#333;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                             <h3 style="color:#8e6d05; margin:5px 0;">ACADEMIC SESSION: 2025-2026</h3>
@@ -263,41 +270,17 @@
                             </tr>
                         </table>
 
-                        <table border="1" style="width:100%; text-align:center; border-collapse:collapse; font-size:12px; border:1px solid #0d47a1;">
+                        <table border="1" style="width:100%; text-align:center; border-collapse:collapse; font-size:12px; border:2px solid #0d47a1; overflow:hidden; border-radius:10px;">
                             <thead>
                                 <tr style="background: linear-gradient(to bottom, #0d47a1, #1565c0); color:white; height:38px;">
-                                    <th style="width:32%;">SUBJECTS</th><th>UT-1</th><th>HY</th><th>UT-2</th><th>ANNUAL</th><th>TOTAL</th><th>GRADE</th>
+                                    <th style="width:32%; border:none;">SUBJECTS</th>
+                                    <th style="border:none;">UT-1</th><th style="border:none;">HY</th>
+                                    <th style="border:none;">UT-2</th><th style="border:none;">ANNUAL</th>
+                                    <th style="border:none;">TOTAL</th><th style="border:none;">GRADE</th>
                                 </tr>
                             </thead>
                             <tbody>${rows}</tbody>
                         </table>
 
-                        <div style="margin-top:15px; border:2px solid #8e6d05; padding:12px; background:#f9f9f9; display:grid; grid-template-columns:1fr 1fr; font-weight:bold; font-size:16px; border-radius:10px;">
-                            <div>GRAND TOTAL: <span style="color:#b71c1c;">${grand}/600</span></div>
-                            <div>RESULT: <span style="color:#b71c1c;">${grand >= 210 ? 'PASSED' : 'FAILED'}</span></div>
-                        </div>
-
-                        <div style="margin-top:15px; font-size:15px;">
-                            <p style="margin-bottom:8px;"><b>TEACHER'S REMARKS:</b> <span style="border-bottom:1px dashed #333; color:#0d47a1;">${grand >= 210 ? 'EXCELLENT WORK, KEEP IT UP.' : 'NEEDS IMPROVEMENT.'}</span></p>
-                            <p style="font-weight:900; font-size:17px; color:#b71c1c; margin-top:10px;">
-                                ➔ PROMOTED TO CLASS: <span style="background:#fff8e1; padding:2px 10px; border-radius:5px; border:1px solid #8e6d05;">${grand >= 210 ? 'NEXT HIGHER CLASS' : 'DETAINED'}</span>
-                            </p>
-                        </div>
-                        
-                        <div style="margin-top:55px; display:flex; justify-content:space-between; padding:0 10px;">
-                            <span style="border-top:1.5px solid #000; width:170px; text-align:center; padding-top:5px; font-weight:bold; font-size:13px;">CLASS TEACHER SIGN</span>
-                            <span style="border-top:1.5px solid #000; width:170px; text-align:center; padding-top:5px; font-weight:bold; font-size:13px;">PRINCIPAL SIGN</span>
-                        </div>
-                    </div>
-                </div>`;
-            }
-        });
-        const win = window.open('', '_blank');
-        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0;}</style></head><body>${content}</body></html>`);
-        win.document.close();
-        setTimeout(() => win.print(), 1000);
-    }
-    sync();
-</script>
-</body>
-</html>
+                        <div style="margin-top:15px; border:2px solid #8e6d05; padding:12px; background:#f9f9f9; display:grid; grid-template-columns:1.2fr 0.8fr 1fr; font-weight:bold; font-size:15px; border-radius:10px; align-items:center;">
+                            <div>GRAND TOTAL: <span style="color:#b71c1c;">${grand}/60
