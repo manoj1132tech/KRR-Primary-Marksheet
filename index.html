@@ -164,7 +164,6 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         
-        // Find and highlight button based on text
         const btns = document.querySelectorAll('.nav-btn');
         btns.forEach(btn => {
             if(btn.innerText.includes(pageId.replace('Page','').toUpperCase())) btn.classList.add('active');
@@ -197,7 +196,6 @@
         sync();
     }
 
-    // --- ADJUSTED EDIT LOGIC ---
     function loadEditTable() {
         const cls = document.getElementById('eClass').value;
         if(!cls) { document.getElementById('editArea').innerHTML = ""; return; }
@@ -217,20 +215,11 @@
 
     async function updateRecord(idx) {
         const old = MASTER[idx];
-        const newData = [
-            document.getElementById(`en${idx}`).value, // Name
-            old[1], // Mother
-            document.getElementById(`ef${idx}`).value, // Father
-            old[3], // Class
-            document.getElementById(`er${idx}`).value, // Roll
-            old[5], // DOB
-            old[6]  // Marks
-        ];
+        const newData = [document.getElementById(`en${idx}`).value, old[1], document.getElementById(`ef${idx}`).value, old[3], document.getElementById(`er${idx}`).value, old[5], old[6]];
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateDetails", rowIndex: idx, newData: newData}) });
         alert("DETAILS UPDATED!"); sync();
     }
 
-    // --- ADJUSTED MARKS LOGIC ---
     function filterStudents() {
         const cls = document.getElementById('mClass').value;
         const sel = document.getElementById('mStudent');
@@ -270,7 +259,7 @@
         sync();
     }
 
-    // --- MARKSHEET PRINT (UNCHANGED) ---
+    // --- MARKSHEET PRINT (RESTORED OLD DESIGN WITH NEW STUDENT LABELS) ---
     function printAll() {
         const cls = document.getElementById('pClass').value;
         let content = '';
@@ -279,48 +268,90 @@
                 let m = {}; try { m = JSON.parse(r[6] || "{}"); } catch(e) {}
                 let grandTotal = 0;
                 let subjects = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
+                
                 let tableRows = subjects.map(s => {
                     let t = Number(m[s+'_UT1']||0) + Number(m[s+'_HY']||0) + Number(m[s+'_UT2']||0) + Number(m[s+'_AN']||0);
                     grandTotal += t;
-                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px;">${s}</td><td>${m[s+'_UT1']||0}</td><td>${m[s+'_HY']||0}</td><td>${m[s+'_UT2']||0}</td><td>${m[s+'_AN']||0}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td></tr>`;
+                    return `<tr>
+                        <td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px; border:1px solid #1a237e;">${s}</td>
+                        <td style="border:1px solid #1a237e;">${m[s+'_UT1']||0}</td>
+                        <td style="border:1px solid #1a237e;">${m[s+'_HY']||0}</td>
+                        <td style="border:1px solid #1a237e;">${m[s+'_UT2']||0}</td>
+                        <td style="border:1px solid #1a237e;">${m[s+'_AN']||0}</td>
+                        <td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${t}</td>
+                    </tr>`;
                 }).join('');
                 
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px;">STORY TELLING</td><td colspan="4">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td></tr>`;
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px;">PHYSICAL ACTIVITY</td><td colspan="4">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px; border:1px solid #1a237e;">STORY TELLING</td><td colspan="4" style="border:1px solid #1a237e;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${m['STORY TELLING_TOTAL']||'-'}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:10px; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="4" style="border:1px solid #1a237e;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
 
                 let perc = (grandTotal / 6).toFixed(2);
                 let status = grandTotal >= 198 ? "PASSED" : "FAILED";
                 let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
-                content += `<div style="width:210mm; min-height:297mm; padding:15mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; background:white;">
+                // STAR GRADE LOGIC
+                let stars = "";
+                if(perc >= 90) stars = "★★★★★";
+                else if(perc >= 75) stars = "★★★★";
+                else if(perc >= 60) stars = "★★★";
+                else if(perc >= 45) stars = "★★";
+                else stars = "★";
+
+                content += `
+                <div style="width:210mm; min-height:297mm; padding:15mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white;">
                     <center>
-                        <h1 style="color:#1a237e; margin:0; font-size:32px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                        <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+                        <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                        <p style="color:#000; margin:5px 0; font-weight:bold; font-size:16px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
-                        <div style="border:2px solid #b8860b; padding:5px 30px; display:inline-block; font-weight:bold;">PROGRESS REPORT</div>
+                        <div style="border:2px solid #b8860b; border-radius:15px; padding:5px 30px; background:#fff3e0; color:#1a237e; font-weight:bold; font-size:18px; display:inline-block;">PROGRESS REPORT</div>
                     </center>
-                    <div style="margin:20px 0; border:2px solid #1a237e; padding:10px; display:grid; grid-template-columns: 1fr 1fr; gap:5px; font-size:14px;">
-                        <div>NAME: <b>${r[0]}</b></div> <div>FATHER: <b>${r[2]}</b></div>
-                        <div>ROLL: <b>${r[4]}</b></div> <div>CLASS: <b>${r[3]}</b></div>
-                        <div>MOTHER: <b>${r[1]}</b></div> <div>DOB: <b>${r[5]}</b></div>
+
+                    <div style="margin:20px 0; border:2px solid #1a237e; padding:15px; border-radius:10px; display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:16px;">
+                        <div><span style="color:#000;">NAME:</span> <span style="color:#1a237e; font-weight:bold;">${r[0]}</span></div> 
+                        <div><span style="color:#000;">FATHER:</span> <span style="color:#1a237e; font-weight:bold;">${r[2]}</span></div>
+                        <div><span style="color:#000;">ROLL NO:</span> <span style="color:#1a237e; font-weight:bold;">${r[4]}</span></div> 
+                        <div><span style="color:#000;">CLASS:</span> <span style="color:#1a237e; font-weight:bold;">${r[3]}</span></div>
+                        <div><span style="color:#000;">MOTHER:</span> <span style="color:#1a237e; font-weight:bold;">${r[1]}</span></div> 
+                        <div><span style="color:#000;">DOB:</span> <span style="color:#1a237e; font-weight:bold;">${r[5]}</span></div>
                     </div>
-                    <table border="1" style="width:100%; border-collapse:collapse; text-align:center;">
-                        <tr style="background:#1a237e; color:white;"><th>SUBJECT</th><th>UT1</th><th>HY</th><th>UT2</th><th>ANN</th><th>TOTAL</th></tr>
+
+                    <table style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #1a237e;">
+                        <tr style="background:#1a237e; color:white; height:35px;">
+                            <th style="border:1px solid white;">SUBJECT NAME</th>
+                            <th style="border:1px solid white;">UT-1</th>
+                            <th style="border:1px solid white;">HALF YEARLY</th>
+                            <th style="border:1px solid white;">UT-2</th>
+                            <th style="border:1px solid white;">ANNUAL</th>
+                            <th style="border:1px solid white;">TOTAL</th>
+                        </tr>
                         ${tableRows}
                     </table>
-                    <div style="margin-top:20px; border:2px solid #b8860b; padding:10px; font-weight:bold;">
-                        TOTAL: ${grandTotal}/600 | PERCENTAGE: ${perc}% | RESULT: ${status}
+
+                    <div style="margin-top:20px; border:2px solid #b8860b; border-radius:12px; padding:15px; background:#f9f9f9; font-size:18px; font-weight:bold;">
+                        <table style="width:100%; border:none;">
+                            <tr>
+                                <td style="color:#000;">TOTAL MARKS: <span style="color:#d32f2f;">${grandTotal} / 600</span></td>
+                                <td style="color:#000;">PERCENTAGE: <span style="color:#d32f2f;">${perc}%</span></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#000;">RESULT STATUS: <span style="color:#d32f2f;">${status}</span></td>
+                                <td style="color:#000;">GRADE: <span style="color:#d32f2f; font-size:22px;">${stars}</span></td>
+                            </tr>
+                        </table>
                     </div>
-                    <p>REMARKS: ${status === 'PASSED' ? 'EXCELLENT' : 'NEEDS IMPROVEMENT'}</p>
-                    <p>PROMOTED TO: <b>${status === 'PASSED' ? nextCls : cls}</b></p>
-                    <div style="margin-top:50px; display:flex; justify-content:space-between;">
-                        <span>CLASS TEACHER</span> <span>PRINCIPAL</span>
+
+                    <p style="margin-top:25px; font-size:16px;"><b style="color:#000;">REMARKS:</b> <span style="color:#1a237e;">${status === 'PASSED' ? 'EXCELLENT PERFORMANCE.' : 'NEEDS IMPROVEMENT.'}</span></p>
+                    <p style="border-bottom:2px dashed #000; padding-bottom:10px; font-size:16px;"><b style="color:#000;">PROMOTED TO:</b> <span style="color:#1a237e; font-weight:bold;">${status === 'PASSED' ? nextCls : cls}</span></p>
+                    
+                    <div style="margin-top:60px; display:flex; justify-content:space-between; font-weight:bold; color:#000;">
+                        <span style="border-top:2px solid #000; padding-top:5px; width:200px; text-align:center;">CLASS TEACHER</span> 
+                        <span style="border-top:2px solid #000; padding-top:5px; width:200px; text-align:center;">PRINCIPAL</span>
                     </div>
                 </div>`;
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><body>${content}</body></html>`);
+        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0; padding:0;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
