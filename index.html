@@ -33,11 +33,11 @@
 <body>
 
 <div class="nav-bar no-print">
-    <h2 style="color:white; border:none; margin:5px 0;">K.R.R. Junior School</h2>
-    <button class="nav-btn active" onclick="openPage('regPage')">Registration</button>
-    <button class="nav-btn" onclick="openPage('editPage')">Edit Details</button>
-    <button class="nav-btn" onclick="openPage('marksPage')">Marks Entry</button>
-    <button class="nav-btn" onclick="openPage('adminPage')">Admin Panel</button>
+    <h2 style="color:white; border:none; margin:5px 0;">K.R.R. JUNIOR SCHOOL</h2>
+    <button class="nav-btn active" onclick="openPage('regPage')">REGISTRATION</button>
+    <button class="nav-btn" onclick="openPage('editPage')">EDIT DETAILS</button>
+    <button class="nav-btn" onclick="openPage('marksPage')">MARKS ENTRY</button>
+    <button class="nav-btn" onclick="openPage('adminPage')">ADMIN PANEL</button>
 </div>
 
 <div class="container no-print">
@@ -48,22 +48,22 @@
             <input type="text" id="rMother" placeholder="Mother's name">
             <input type="text" id="rFather" placeholder="Father's name">
             <input type="text" id="rRoll" placeholder="Roll no">
-            <select id="rClass"><option value="">Select class</option><option>Nursery</option><option>Lkg</option><option>Ukg</option></select>
+            <select id="rClass"><option value="">Select class</option><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
             <div style="display:flex; gap:5px;">
                 <select id="dobD"><option value="">Dd</option></select>
                 <select id="dobM"><option value="">Mm</option></select>
                 <select id="dobY"><option value="">Yyyy</option></select>
             </div>
         </div>
-        <button class="btn-save" onclick="register()">Save student data</button>
+        <button class="btn-save" onclick="register()">SAVE STUDENT DATA</button>
     </div>
 
     <div id="editPage" class="page">
         <h2>Edit Student Details</h2>
-        <select id="eClass" onchange="loadEditList()" style="margin-bottom: 20px;"><option value="">-- Select class --</option><option>Nursery</option><option>Lkg</option><option>Ukg</option></select>
+        <select id="eClass" onchange="loadEditList()" style="margin-bottom: 20px;"><option value="">-- Select class --</option><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
         <div id="editListArea"></div>
         <div id="editFormArea" style="display:none; margin-top:20px; border-top:2px solid var(--gold); padding-top:20px;">
-            <h3>Update information</h3>
+            <h3>Update Information</h3>
             <div class="form-grid">
                 <input type="hidden" id="editIndex">
                 <input type="text" id="eName" placeholder="Student name">
@@ -72,23 +72,23 @@
                 <input type="text" id="eRoll" placeholder="Roll no">
                 <input type="text" id="eDob" placeholder="Dob (dd/mm/yyyy)">
             </div>
-            <button class="btn-save" onclick="updateStudentInfo()">Save changes</button>
+            <button class="btn-save" onclick="updateStudentInfo()">SAVE CHANGES</button>
         </div>
     </div>
 
     <div id="marksPage" class="page">
         <h2>Marks Entry</h2>
         <div class="form-grid">
-            <select id="mClass" onchange="filterStudents()"><option value="">-- Class --</option><option>Nursery</option><option>Lkg</option><option>Ukg</option></select>
+            <select id="mClass" onchange="filterStudents()"><option value="">-- Class --</option><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
             <select id="mStudent" onchange="showStudentDetail()"></select>
         </div>
         <div id="mDetailBox" style="padding:15px; background:#e3f2fd; margin:15px 0; display:none; border-radius:8px;"></div>
         <div id="marksForm" style="display:none;">
             <select id="mSub" onchange="handleSubFields()"><option value="">-- Select subject --</option>
-                <option>Hindi oral</option><option>Hindi written</option>
-                <option>English oral</option><option>English written</option>
-                <option>Mathematics oral</option><option>Mathematics written</option>
-                <option>Story telling</option><option>Physical activity</option>
+                <option>HINDI ORAL</option><option>HINDI WRITTEN</option>
+                <option>ENGLISH ORAL</option><option>ENGLISH WRITTEN</option>
+                <option>MATHEMATICS ORAL</option><option>MATHEMATICS WRITTEN</option>
+                <option>STORY TELLING</option><option>PHYSICAL ACTIVITY</option>
             </select>
             <div id="normalFields" class="form-grid" style="margin-top:10px;">
                 <input type="number" id="v1" placeholder="Ut-1 (10)">
@@ -100,14 +100,14 @@
                 <label>Select grade:</label>
                 <select id="gVal"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
             </div>
-            <button class="btn-save" onclick="saveMarks()">Update marks</button>
+            <button class="btn-save" onclick="saveMarks()">UPDATE MARKS</button>
         </div>
     </div>
 
     <div id="adminPage" class="page">
         <h2>Generate Reports</h2>
-        <select id="pClass"><option>Nursery</option><option>Lkg</option><option>Ukg</option></select>
-        <button class="btn-save" style="background:var(--red);" onclick="printAll()">Print all marksheets</button>
+        <select id="pClass"><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
+        <button class="btn-save" style="background:var(--red);" onclick="printAll()">PRINT ALL MARKSHEETS</button>
     </div>
 </div>
 
@@ -130,12 +130,9 @@
 
     function handleSubFields() {
         const sub = document.getElementById('mSub').value;
-        const isGrade = (sub === "Hindi oral" || sub === "Hindi written"); // Adjusted logic to match new casing if needed, but better to keep original functional names or use .toUpperCase() in logic
-        // Original logic kept for reliability:
-        const checkSub = sub.toUpperCase();
-        const isGradeLogic = (checkSub === "STORY TELLING" || checkSub === "PHYSICAL ACTIVITY");
-        document.getElementById('normalFields').style.display = isGradeLogic ? "none" : "grid";
-        document.getElementById('gradeFields').style.display = isGradeLogic ? "block" : "none";
+        const isGrade = (sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY");
+        document.getElementById('normalFields').style.display = isGrade ? "none" : "grid";
+        document.getElementById('gradeFields').style.display = isGrade ? "block" : "none";
         document.getElementById('v1').value=''; document.getElementById('v2').value=''; document.getElementById('v3').value=''; document.getElementById('v4').value='';
     }
 
@@ -144,13 +141,13 @@
         if(!d || !m || !y) { alert("Select full date"); return; }
         const data = [document.getElementById('rName').value, document.getElementById('rMother').value, document.getElementById('rFather').value, document.getElementById('rClass').value, document.getElementById('rRoll').value, `${d}/${m}/${y}`];
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "appendStudent", rowData: data}) });
-        alert("Saved!"); sync();
+        alert("SAVED!"); sync();
     }
 
     function loadEditList() {
         const cls = document.getElementById('eClass').value;
-        let html = '<table><tr><th>Roll</th><th>Name</th><th>Action</th></tr>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3].toUpperCase()===cls.toUpperCase()) html += `<tr><td>${r[4]}</td><td>${r[0]}</td><td><button class="btn-edit" onclick="showEditForm(${i})">Edit</button></td></tr>`; });
+        let html = '<table><tr><th>ROLL</th><th>NAME</th><th>ACTION</th></tr>';
+        MASTER.forEach((r, i) => { if(i>0 && r[3]===cls) html += `<tr><td>${r[4]}</td><td>${r[0]}</td><td><button class="btn-edit" onclick="showEditForm(${i})">EDIT</button></td></tr>`; });
         document.getElementById('editListArea').innerHTML = html + '</table>';
     }
 
@@ -168,27 +165,27 @@
         const i = document.getElementById('editIndex').value;
         const mObj = { "name": document.getElementById('eName').value, "mother": document.getElementById('eMother').value, "father": document.getElementById('eFather').value, "roll": document.getElementById('eRoll').value, "dob": document.getElementById('eDob').value };
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateMarks", rowIndex: parseInt(i), marksObj: mObj}) });
-        alert("Updated!"); sync();
+        alert("UPDATED!"); sync();
     }
 
     function filterStudents() {
         const cls = document.getElementById('mClass').value;
         const sel = document.getElementById('mStudent');
         sel.innerHTML = '<option value="">-- Select student --</option>';
-        MASTER.forEach((r, i) => { if(i>0 && r[3].toUpperCase()===cls.toUpperCase()) sel.add(new Option(r[0], i)); });
+        MASTER.forEach((r, i) => { if(i>0 && r[3]===cls) sel.add(new Option(r[0], i)); });
     }
 
     function showStudentDetail() {
         const i = document.getElementById('mStudent').value;
         if(!i) return;
-        document.getElementById('mDetailBox').innerHTML = `<b>Student:</b> ${MASTER[i][0]} | <b>Roll:</b> ${MASTER[i][4]}`;
+        document.getElementById('mDetailBox').innerHTML = `<b>STUDENT:</b> ${MASTER[i][0]} | <b>ROLL:</b> ${MASTER[i][4]}`;
         document.getElementById('mDetailBox').style.display = 'block';
         document.getElementById('marksForm').style.display = 'block';
     }
 
     async function saveMarks() {
         const i = document.getElementById('mStudent').value;
-        const sub = document.getElementById('mSub').value.toUpperCase();
+        const sub = document.getElementById('mSub').value;
         let mObj = {};
         if(sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY") { mObj[sub + "_GRADE"] = document.getElementById('gVal').value; }
         else { 
@@ -198,7 +195,7 @@
             mObj[sub+"_AN"]=document.getElementById('v4').value; 
         }
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateMarks", rowIndex: parseInt(i), marksObj: mObj}) });
-        alert("Marks updated!"); sync();
+        alert("MARKS UPDATED!"); sync();
     }
 
     function getStars(total) {
@@ -215,18 +212,17 @@
     }
 
     function getRemarks(total) {
-        if(total >= 510) return "Excellent performance!";
-        if(total >= 420) return "Very good work!";
-        if(total >= 330) return "Good, keep improving.";
-        if(total >= 210) return "Satisfactory, work harder.";
-        return "Poor, needs special attention.";
+        if(total >= 510) return "EXCELLENT PERFORMANCE!";
+        if(total >= 420) return "VERY GOOD WORK!";
+        if(total >= 330) return "GOOD, KEEP IMPROVING.";
+        if(total >= 210) return "SATISFACTORY, WORK HARDER.";
+        return "POOR, NEEDS SPECIAL ATTENTION.";
     }
 
     function getNextClass(current) {
-        let c = current.toUpperCase();
-        if(c === "NURSERY") return "Lkg";
-        if(c === "LKG") return "Ukg";
-        if(c === "UKG") return "1st";
+        if(current === "NURSERY") return "LKG";
+        if(current === "LKG") return "UKG";
+        if(current === "UKG") return "1st";
         return "-";
     }
 
@@ -234,7 +230,7 @@
         const cls = document.getElementById('pClass').value;
         let content = '';
         MASTER.forEach((r, i) => {
-            if(i > 0 && r[3].toUpperCase() === cls.toUpperCase()) {
+            if(i > 0 && r[3] === cls) {
                 let m = {}; try { m = JSON.parse(r[6] || "{}"); } catch(e) {}
                 let grand = 0;
                 let subs = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
@@ -264,42 +260,51 @@
                 let perc = ((grand / 600) * 100).toFixed(2);
                 let resultStatus = grand >= 210 ? 'PASSED' : 'FAILED';
                 let remarks = getRemarks(grand);
-                let promoted = resultStatus === 'PASSED' ? getNextClass(r[3]) : 'Retained';
+                let promoted = resultStatus === 'PASSED' ? getNextClass(r[3]) : 'RETAINED';
 
                 content += `
                 <div style="width:190mm; height:277mm; padding:10mm; margin:5mm auto; border:10px double #0d47a1; box-sizing:border-box; page-break-after:always; position:relative; background:white;">
                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.1; z-index:0;">
-                        ${Array.from({length: 40}).map(() => `<span style="position:absolute; top:${Math.random()*95}%; left:${Math.random()*95}%; font-size:25px;">🌸</span>`).join('')}
+                        ${Array.from({length: 40}).map(() => `<span style="position:absolute; top:${Math.random()*95}%; left:${Math.random()*95}%; font-size:25px; color:#8e6d05;">🌸</span>`).join('')}
                     </div>
 
                     <div style="position:relative; z-index:1;">
                         <center>
                             <img src="logo.jpg" style="width:70px; height:70px; margin-bottom:5px;" onerror="this.style.display='none'">
-                            <h1 style="color:#b71c1c; margin:0; font-size:28px;">K.R.R. Junior High School</h1>
+                            <h1 style="color:#b71c1c; margin:0; font-size:28px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                             <p style="margin:2px 0; font-weight:bold; font-size:12px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
-                            <h3 style="color:#8e6d05; margin:5px 0;">Academic Session: 2025-2026</h3>
-                            <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">Progress Report</div>
+                            <h3 style="color:#8e6d05; margin:5px 0;">ACADEMIC SESSION: 2025-2026</h3>
+                            <div style="background:#0d47a1; color:white; padding:5px 30px; border-radius:20px; font-weight:bold; display:inline-block;">PROGRESS REPORT</div>
                         </center>
 
                         <table style="width:100%; margin:15px 0; border:2px solid #0d47a1; padding:12px; border-radius:12px; font-size:18px; border-collapse:separate; border-spacing:0 8px;">
-                            <tr><td style="color:#000; font-weight:bold;">Name: <span style="color:#b71c1c; font-size:20px;">${r[0]}</span></td><td style="color:#000; font-weight:bold;">Roll no: <span style="color:#0d47a1;">${r[4]}</span></td></tr>
-                            <tr><td style="color:#000; font-weight:bold;">Father's name: <span style="color:#0d47a1;">Mr. ${r[2]}</span></td><td style="color:#000; font-weight:bold;">Mother's name: <span style="color:#0d47a1;">Mrs. ${r[1]}</span></td></tr>
-                            <tr><td style="color:#000; font-weight:bold;">Class: <span style="color:#0d47a1;">${r[3]}</span></td><td style="color:#000; font-weight:bold;">D.o.b: <span style="color:#0d47a1;">${r[5]}</span></td></tr>
+                            <tr>
+                                <td style="color:#000; font-weight:bold; width:auto;">Name: <span style="color:#b71c1c; font-size:20px;">${r[0]}</span></td>
+                                <td style="color:#000; font-weight:bold; width:auto;">Roll no: <span style="color:#0d47a1;">${r[4]}</span></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#000; font-weight:bold;">Father's name: <span style="color:#0d47a1;">MR. ${r[2]}</span></td>
+                                <td style="color:#000; font-weight:bold;">Mother's name: <span style="color:#0d47a1;">MRS. ${r[1]}</span></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#000; font-weight:bold;">Class: <span style="color:#0d47a1;">${r[3]}</span></td>
+                                <td style="color:#000; font-weight:bold;">D.o.b: <span style="color:#0d47a1;">${r[5]}</span></td>
+                            </tr>
                         </table>
 
                         <table border="1" style="width:100%; text-align:center; border-collapse:collapse; font-size:12px; border:2px solid #0d47a1;">
                             <thead>
                                 <tr style="background:#0d47a1; color:white; height:35px;">
-                                    <th>Subjects</th><th>Ut-1</th><th>Hy</th><th>Ut-2</th><th>Annual</th><th>Total</th><th>Grade</th>
+                                    <th>SUBJECTS</th><th>UT-1</th><th>HY</th><th>UT-2</th><th>ANNUAL</th><th>TOTAL</th><th>GRADE</th>
                                 </tr>
                             </thead>
                             <tbody>${rows}</tbody>
                         </table>
 
                         <div style="margin-top:15px; border:2px solid #8e6d05; padding:10px; display:grid; grid-template-columns:1fr 1fr 1fr; font-weight:bold; background:#fff9e6; border-radius:8px;">
-                            <div>Total: <span style="color:#b71c1c;">${grand}/600</span></div>
-                            <div style="text-align:center;">Percentage: <span style="color:#0d47a1;">${perc}%</span></div>
-                            <div style="text-align:right;">Result: <span style="color:#b71c1c;">${resultStatus}</span></div>
+                            <div>TOTAL: <span style="color:#b71c1c;">${grand}/600</span></div>
+                            <div style="text-align:center;">PERCENTAGE: <span style="color:#0d47a1;">${perc}%</span></div>
+                            <div style="text-align:right;">RESULT: <span style="color:#b71c1c;">${resultStatus}</span></div>
                         </div>
 
                         <div style="margin-top:10px; border:1px solid #0d47a1; padding:10px; border-radius:8px; background:#f0f7ff;">
@@ -308,8 +313,8 @@
                         </div>
 
                         <div style="margin-top:40px; display:flex; justify-content:space-between; padding:0 10px;">
-                            <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px;">Class teacher</span>
-                            <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px;">Principal sign</span>
+                            <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px;">CLASS TEACHER</span>
+                            <span style="border-top:1px solid #000; width:150px; text-align:center; font-size:12px;">PRINCIPAL SIGN</span>
                         </div>
 
                         <div style="text-align:center; margin-top:30px; color:#2e7d32; font-size:24px; letter-spacing:15px;">
