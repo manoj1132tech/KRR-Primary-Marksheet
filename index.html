@@ -22,7 +22,9 @@
         label { font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #555; }
         input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; text-transform: uppercase; width: 100%; box-sizing: border-box; }
         
+        .dob-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
         .btn-save { background: #2e7d32; color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-save:hover { background: #1b5e20; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
@@ -60,37 +62,68 @@
             </div>
             <div class="input-group">
                 <label>Date of Birth</label>
-                <input type="text" id="rDob" placeholder="DD/MM/YYYY">
+                <div class="dob-grid">
+                    <select id="dobD"><option value="">DD</option></select>
+                    <select id="dobM"><option value="">MM</option></select>
+                    <select id="dobY"><option value="">YYYY</option></select>
+                </div>
             </div>
         </div>
         <button class="btn-save" id="regBtn" onclick="register()">SAVE STUDENT DATA</button>
     </div>
-    <div id="editPage" class="page"><h2>Edit Records</h2><div id="editArea"></div></div>
+
+    <div id="editPage" class="page">
+        <h2>Edit Student Records</h2>
+        <select id="eClass" onchange="loadEditTable()" style="max-width:300px; margin-bottom:20px;">
+            <option value="">-- SELECT CLASS --</option>
+            <option>NURSERY</option><option>LKG</option><option>UKG</option>
+        </select>
+        <div id="editArea"></div>
+    </div>
+
     <div id="marksPage" class="page">
         <h2>Marks Entry</h2>
-        <select id="mClass" onchange="filterStudents()"><option value="">Select Class</option><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
-        <select id="mStudent" onchange="showStudentDetail()"></select>
-        <div id="mDetailBox"></div>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Select Class</label>
+                <select id="mClass" onchange="filterStudents()">
+                    <option value="">-- CHOOSE --</option>
+                    <option>NURSERY</option><option>LKG</option><option>UKG</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Select Student</label>
+                <select id="mStudent" onchange="showStudentDetail()"></select>
+            </div>
+        </div>
+        <div id="mDetailBox" style="padding:15px; background:#e3f2fd; margin-bottom:15px; border-radius:5px; display:none; border-left: 5px solid var(--blue);"></div>
+        
         <div id="marksForm" style="display:none;">
-             <select id="mSub" onchange="handleSubjectChange()">
-                <option value="">-- SUBJECT --</option>
+            <select id="mSub" onchange="handleSubjectChange()">
+                <option value="">-- SELECT SUBJECT --</option>
                 <option>HINDI ORAL</option><option>HINDI WRITTEN</option>
                 <option>ENGLISH ORAL</option><option>ENGLISH WRITTEN</option>
                 <option>MATHEMATICS ORAL</option><option>MATHEMATICS WRITTEN</option>
                 <option>STORY TELLING</option><option>PHYSICAL ACTIVITY</option>
-             </select>
-             <div id="normalMarks" class="form-grid">
-                <input type="number" id="v1" placeholder="UT1">
-                <input type="number" id="v2" placeholder="HY">
-                <input type="number" id="v3" placeholder="UT2">
-                <input type="number" id="v4" placeholder="AN">
-             </div>
-             <button class="btn-save" onclick="saveMarks()">UPDATE</button>
+            </select>
+            <div id="normalMarks" class="form-grid" style="margin-top:15px;">
+                <div class="input-group"><label>UT1 (10)</label><input type="number" id="v1"></div>
+                <div class="input-group"><label>HY (40)</label><input type="number" id="v2"></div>
+                <div class="input-group"><label>UT2 (10)</label><input type="number" id="v3"></div>
+                <div class="input-group"><label>AN (40)</label><input type="number" id="v4"></div>
+            </div>
+            <div id="gradeMarks" style="display:none; margin-top:15px;">
+                <label>Overall Grade</label>
+                <select id="gVal"><option>A</option><option>B</option><option>C</option></select>
+            </div>
+            <button class="btn-save" onclick="saveMarks()" style="margin-top:15px;">UPDATE DATA</button>
         </div>
     </div>
+
     <div id="adminPage" class="page">
-        <select id="pClass"><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
-        <button onclick="printAll()">GENERATE MARKSHEETS</button>
+        <h2>Admin Management</h2>
+        <select id="pClass" style="margin-bottom:10px;"><option>NURSERY</option><option>LKG</option><option>UKG</option></select>
+        <button class="btn-save" style="background:var(--red);" onclick="printAll()">GENERATE ALL MARKSHEETS</button>
     </div>
 </div>
 
@@ -98,8 +131,26 @@
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
     let MASTER = [];
 
+    // DOB Init
+    for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i<10?'0'+i:i, i<10?'0'+i:i));
+    const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    months.forEach((m,i)=> document.getElementById('dobM').add(new Option(m, (i+1)<10?'0'+(i+1):(i+1))));
+    for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i,i));
+
     async function sync() { try { const res = await fetch(API); MASTER = await res.json(); } catch(e){} }
-    function openPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); sync(); }
+    function openPage(id) { 
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        sync();
+    }
+
+    function handleSubjectChange() {
+        const sub = document.getElementById('mSub').value;
+        const isGrade = (sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY");
+        document.getElementById('normalMarks').style.display = isGrade ? "none" : "grid";
+        document.getElementById('gradeMarks').style.display = isGrade ? "block" : "none";
+    }
 
     function getGradeStars(score) {
         if(score >= 90) return "★★★★★";
@@ -129,40 +180,45 @@
                         <td style="border:1px solid #1a237e; text-align:center;">${m[s+'_UT2']||0}</td>
                         <td style="border:1px solid #1a237e; text-align:center;">${m[s+'_AN']||0}</td>
                         <td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${t}</td>
-                        <td style="color:#b8860b; border:1px solid #1a237e; text-align:center; font-size:14px;">${stars}</td>
+                        <td style="color:#ffff00; border:1px solid #1a237e; text-align:center; font-size:16px; -webkit-text-stroke: 0.5px #000;">${stars}</td>
                     </tr>`;
                 }).join('');
 
+                // Add activity subjects
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">STORY TELLING</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['STORY TELLING_TOTAL']||'-'}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
+
                 let perc = (grandTotal / 6).toFixed(2);
                 let status = grandTotal >= 198 ? "PASSED" : "FAILED";
+                let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
                 content += `
-                <div style="width:210mm; min-height:297mm; padding:12mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; position:relative; background:white;">
+                <div style="width:210mm; height:297mm; padding:15mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase;">
                     <center>
-                        <img src="logo.jpg" style="height:80px; margin-bottom:10px;" alt="School Logo">
-                        <h1 style="color:#1a237e; margin:0; font-size:32px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                        <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+                        <img src="logo.jpg" style="height:80px; margin-bottom:5px;">
+                        <h1 style="color:#d32f2f; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                        <p style="margin:5px 0; font-weight:bold; color:#000;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
-                        <div style="border:2px solid #b8860b; padding:5px 25px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:10px;">PROGRESS REPORT</div>
+                        <div style="border:2px solid #b8860b; padding:5px 30px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:15px; font-size:18px;">PROGRESS REPORT</div>
                     </center>
 
-                    <div style="margin:20px 0; border:2px solid #1a237e; padding:15px; border-radius:10px; display:grid; grid-template-rows: repeat(3, auto); gap:10px; background:#f1f4f9; font-size:15px;">
+                    <div style="margin:20px 0; border:2px solid #1a237e; padding:15px; border-radius:10px; background:#f1f4f9; display:grid; grid-template-rows: repeat(3, auto); gap:10px; font-size:16px;">
                         <div style="display:grid; grid-template-columns: 1.5fr 1fr;">
-                            <div><span style="color:#000;">NAME:</span> <span style="color:#1a237e; font-weight:bold;">${r[0]}</span></div>
-                            <div><span style="color:#000;">ROLL NO:</span> <span style="color:#1a237e; font-weight:bold;">${r[4]}</span></div>
+                            <div>NAME: <span style="color:#1a237e; font-weight:bold;">${r[0]}</span></div>
+                            <div>ROLL NO: <span style="color:#1a237e; font-weight:bold;">${r[4]}</span></div>
                         </div>
                         <div style="display:grid; grid-template-columns: 1.5fr 1fr;">
-                            <div><span style="color:#000;">Father's Name:</span> <span style="color:#1a237e; font-weight:bold;">${r[2]}</span></div>
-                            <div><span style="color:#000;">Mother's Name:</span> <span style="color:#1a237e; font-weight:bold;">${r[1]}</span></div>
+                            <div>FATHER'S NAME: <span style="color:#1a237e; font-weight:bold;">${r[2]}</span></div>
+                            <div>MOTHER'S NAME: <span style="color:#1a237e; font-weight:bold;">${r[1]}</span></div>
                         </div>
                         <div style="display:grid; grid-template-columns: 1.5fr 1fr;">
-                            <div><span style="color:#000;">CLASS:</span> <span style="color:#1a237e; font-weight:bold;">${r[3]}</span></div>
-                            <div><span style="color:#000;">DOB:</span> <span style="color:#1a237e; font-weight:bold;">${r[5]}</span></div>
+                            <div>CLASS: <span style="color:#1a237e; font-weight:bold;">${r[3]}</span></div>
+                            <div>DOB: <span style="color:#1a237e; font-weight:bold;">${r[5]}</span></div>
                         </div>
                     </div>
 
                     <table style="width:100%; border-collapse:collapse; border:2px solid #1a237e;">
-                        <tr style="background:#1a237e; color:white; font-size:13px;">
+                        <tr style="background:#1a237e; color:white;">
                             <th style="border:1px solid white;">SUBJECT NAME</th>
                             <th style="border:1px solid white;">UT-1</th>
                             <th style="border:1px solid white;">HALF YEARLY</th>
@@ -174,33 +230,32 @@
                         ${tableRows}
                     </table>
 
-                    <div style="margin-top:20px; border:2px solid #b8860b; padding:15px; border-radius:10px; background:#fff;">
+                    <div style="margin-top:20px; border:2px solid #b8860b; padding:15px; border-radius:12px; background:#fff; font-size:18px; font-weight:bold;">
                         <table style="width:100%;">
                             <tr>
-                                <td><b>TOTAL MARKS:</b> <span style="color:#d32f2f;">${grandTotal} / 600</span></td>
-                                <td><b>PERCENTAGE:</b> <span style="color:#d32f2f;">${perc}%</span></td>
-                                <td><b>RESULT STATUS:</b> <span style="color:#d32f2f;">${status}</span></td>
+                                <td>TOTAL MARKS: <span style="color:#d32f2f;">${grandTotal} / 600</span></td>
+                                <td>PERCENTAGE: <span style="color:#d32f2f;">${perc}%</span></td>
+                                <td>RESULT STATUS: <span style="color:#d32f2f;">${status}</span></td>
                             </tr>
                         </table>
                     </div>
 
-                    <p style="margin-top:20px;"><b>REMARKS:</b> <span style="color:#1a237e;">${status === 'PASSED' ? 'EXCELLENT!' : 'WORK HARD.'}</span></p>
+                    <p style="margin-top:20px; font-size:16px;"><b>REMARKS:</b> <span style="color:#1a237e;">${status === 'PASSED' ? 'EXCELLENT PERFORMANCE.' : 'NEEDS IMPROVEMENT.'}</span></p>
+                    <p style="border-bottom:2px dashed #000; padding-bottom:10px; font-size:16px;"><b>PROMOTED TO CLASS:</b> <span style="color:#1a237e; font-weight:bold;">${status === 'PASSED' ? nextCls : cls}</span></p>
                     
-                    <div style="margin-top:50px; display:flex; justify-content:space-between; font-weight:bold;">
-                        <span style="border-top:1px solid #000; width:180px; text-align:center;">CLASS TEACHER</span>
-                        <span style="border-top:1px solid #000; width:180px; text-align:center;">PRINCIPAL</span>
+                    <div style="margin-top:60px; display:flex; justify-content:space-between; font-weight:bold;">
+                        <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:5px;">CLASS TEACHER</span>
+                        <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:5px;">PRINCIPAL</span>
                     </div>
 
-                    <div style="position:absolute; bottom:15mm; left:0; width:100%; text-align:center; font-size:24px;">
-                        <span style="color:red;">✿</span> <span style="color:orange;">✿</span> <span style="color:blue;">✿</span> <span style="color:green;">✿</span> 
-                        <span style="color:purple;">✿</span> <span style="color:red;">✿</span> <span style="color:orange;">✿</span> <span style="color:blue;">✿</span> 
-                        <span style="color:green;">✿</span> <span style="color:purple;">✿</span>
+                    <div style="position:absolute; bottom:15mm; left:0; width:100%; text-align:center; font-size:28px; color:red;">
+                        ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
                     </div>
                 </div>`;
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0; text-transform:uppercase;}</style></head><body>${content}</body></html>`);
+        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
