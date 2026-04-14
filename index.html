@@ -6,7 +6,8 @@
     <title>KRR Junior School - Portal</title>
     <style>
         :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --black: #000000; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; text-transform: uppercase; }
+        /* Background color applied to the entire page */
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; text-transform: uppercase; min-height: 100vh; }
         .nav-bar { background: var(--blue); padding: 10px; text-align: center; color: white; position: sticky; top:0; z-index:1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 20px; cursor: pointer; border-radius: 5px; margin: 3px; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: var(--red); border-color: white; }
@@ -217,10 +218,18 @@
         MASTER.forEach((r, i) => { if(i > 0 && r[3] === cls) sel.add(new Option(r[0], i)); });
     }
 
+    // Fixed Detail Box Styling
     function showStudentDetail() {
         const i = document.getElementById('mStudent').value;
         if(!i) return;
-        document.getElementById('mDetailBox').innerHTML = `<b>STUDENT:</b> ${MASTER[i][0]}<br><b>ROLL:</b> ${MASTER[i][4]} | <b>FATHER:</b> ${MASTER[i][2]}`;
+        document.getElementById('mDetailBox').innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
+                <div><b>STUDENT:</b> <span style="color:var(--blue)">${MASTER[i][0]}</span></div>
+                <div style="text-align:right;"><b>ROLL NO:</b> <span style="color:var(--blue)">${MASTER[i][4]}</span></div>
+                <div><b>FATHER:</b> <span style="color:var(--blue)">${MASTER[i][2]}</span></div>
+                <div style="text-align:right;"><b>MOTHER:</b> <span style="color:var(--blue)">${MASTER[i][1]}</span></div>
+                <div><b>DOB:</b> <span style="color:var(--blue)">${MASTER[i][5]}</span></div>
+            </div>`;
         document.getElementById('mDetailBox').style.display = 'block';
         document.getElementById('marksForm').style.display = 'block';
     }
@@ -246,7 +255,7 @@
     }
 
     function getStars(score, isGrade = false) {
-        let starStyle = "color:#ffd700;"; // Gold Color Stars
+        let starStyle = "color:#ffd700;"; 
         let stars = "";
         if(isGrade) {
             if(score === 'A+') stars = '★★★★★';
@@ -263,6 +272,13 @@
         return `<span style="${starStyle}">${stars}</span>`;
     }
 
+    // Logic for prefixing zero
+    function formatScore(val) {
+        if (val === "" || val === null || val === undefined) return "00";
+        let num = Number(val);
+        return num < 10 ? '0' + num : num;
+    }
+
     function printAll() {
         const cls = document.getElementById('pClass').value;
         let content = '';
@@ -272,13 +288,19 @@
                 let grandTotal = 0;
                 let subjects = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
                 let tableRows = subjects.map(s => {
-                    let t = Number(m[s+'_UT1']||0) + Number(m[s+'_HY']||0) + Number(m[s+'_UT2']||0) + Number(m[s+'_AN']||0);
+                    let u1 = Number(m[s+'_UT1']||0);
+                    let hy = Number(m[s+'_HY']||0);
+                    let u2 = Number(m[s+'_UT2']||0);
+                    let an = Number(m[s+'_AN']||0);
+                    let t = u1 + hy + u2 + an;
                     grandTotal += t;
-                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${m[s+'_UT1']||0}</td><td>${m[s+'_HY']||0}</td><td>${m[s+'_UT2']||0}</td><td>${m[s+'_AN']||0}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
+                    // Applied formatScore to UT marks
+                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${formatScore(u1)}</td><td>${hy}</td><td>${formatScore(u2)}</td><td>${an}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
                 }).join('');
                 
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td><td>${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td>${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
+                // Changed "ACTIVITY GRADE" to "ACTIVITY BASED GRADE"
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td><td>${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td>${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
 
                 let perc = (grandTotal / 6).toFixed(2);
                 let status = grandTotal >= 198 ? "PASSED" : "FAILED";
@@ -287,7 +309,6 @@
                 content += `
                 <div style="width:190mm; min-height:277mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     <center>
-                        <img src="logo.jpg" style="height:80px; margin-bottom:10px;" onerror="this.style.display='none'">
                         <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
