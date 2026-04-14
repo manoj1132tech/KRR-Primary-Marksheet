@@ -240,68 +240,72 @@
                 tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
                 
                 content += `
-                <div style="width:210mm; height:297mm; padding:8mm; margin:auto; border:4px solid #1a237e; outline: 2px solid #1a237e; outline-offset: -6px; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase; overflow:hidden;">
+                <div style="width:210mm; height:297mm; padding:6mm; margin:0 auto; border:5px solid #1a237e; outline: 2.5px solid #1a237e; outline-offset: -8px; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
                     
                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.50; z-index:0; overflow:hidden;">
-                        <div style="display: flex; flex-wrap: wrap; transform: rotate(-30deg); width: 140%; height: 140%; justify-content: center; align-content: center; gap: 10px;">
-                            ${Array(800).fill('<div style="font-size: 14px; font-weight: bold; color: #1a237e; white-space:nowrap; margin:5px;">KRR JUNIOR SCHOOL</div>').join('')}
+                        <div style="display: flex; flex-wrap: wrap; transform: rotate(-25deg); width: 150%; height: 150%; justify-content: center; align-content: center; gap: 30px;">
+                            ${Array(400).fill('<div style="font-size: 25px; color: #1a237e; margin:15px;">✿</div>').join('')}
                         </div>
                     </div>
 
-                    <div style="position:relative; z-index:1; padding: 5px;">
-                        <center>
-                            <img src="logo.jpg" style="height:80px; margin-bottom:5px;">
-                            <h1 style="color:var(--school-name); margin:0; font-size:35px; -webkit-text-stroke: 0.8px #000; filter: drop-shadow(2px 2px 2px #ccc);">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:5px 0; font-weight:bold; color:#000;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
-                            <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
-                            <div style="border:2px solid #b8860b; padding:5px 30px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:15px; font-size:18px;">PROGRESS REPORT</div>
-                        </center>
+                    <div style="position:relative; z-index:1; padding: 5px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <center>
+                                <img src="logo.jpg" style="height:85px; margin-bottom:5px;">
+                                <h1 style="color:var(--school-name); margin:0; font-size:36px; -webkit-text-stroke: 0.8px #000; filter: drop-shadow(2px 2px 2px #ccc);">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                                <p style="margin:5px 0; font-weight:bold; color:#000; font-size:16px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+                                <h3 style="color:#b8860b; margin:8px 0;">SESSION: 2025-2026</h3>
+                                <div style="border:2.5px solid #b8860b; padding:6px 35px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:20px; font-size:19px;">PROGRESS REPORT</div>
+                            </center>
 
-                        <div style="margin:15px 0; border:2px solid #1a237e; padding:12px; border-radius:10px; background:rgba(241, 244, 249, 0.8); display:grid; grid-template-rows: repeat(3, auto); gap:8px; font-size:15px;">
-                            <style>
-                                .info-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; }
-                                .info-item { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: flex; align-items: baseline; }
-                                .info-label { flex-shrink: 0; font-weight: normal; }
-                                .info-val { color:#1a237e; font-weight:bold; padding-left:5px; font-size: clamp(12px, 2.5vw, 15px); }
-                            </style>
-                            <div class="info-row">
-                                <div class="info-item"><span class="info-label">NAME:</span><span class="info-val">${r[0]}</span></div>
-                                <div class="info-item"><span class="info-label">ROLL NO:</span><span class="info-val">${r[4]}</span></div>
+                            <div style="margin:18px 0; border:2px solid #1a237e; padding:15px; border-radius:12px; background:rgba(241, 244, 249, 0.8); display:grid; gap:10px; font-size:16px;">
+                                <style>
+                                    .info-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 15px; }
+                                    .info-item { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: flex; align-items: baseline; }
+                                    .info-val { color:#1a237e; font-weight:bold; padding-left:8px; font-size: clamp(14px, 2.8vw, 17px); }
+                                </style>
+                                <div class="info-row">
+                                    <div class="info-item">NAME: <span class="info-val">${r[0]}</span></div>
+                                    <div class="info-item">ROLL NO: <span class="info-val">${r[4]}</span></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">FATHER: <span class="info-val">${r[2]}</span></div>
+                                    <div class="info-item">MOTHER: <span class="info-val">${r[1]}</span></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">CLASS: <span class="info-val">${r[3]}</span></div>
+                                    <div class="info-item">DOB: <span class="info-val">${r[5]}</span></div>
+                                </div>
                             </div>
-                            <div class="info-row">
-                                <div class="info-item"><span class="info-label">FATHER'S NAME:</span><span class="info-val">${r[2]}</span></div>
-                                <div class="info-item"><span class="info-label">MOTHER'S NAME:</span><span class="info-val">${r[1]}</span></div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-item"><span class="info-label">CLASS:</span><span class="info-val">${r[3]}</span></div>
-                                <div class="info-item"><span class="info-label">DOB:</span><span class="info-val">${r[5]}</span></div>
-                            </div>
+
+                            <table style="width:100%; border-collapse:collapse; border:2.5px solid #1a237e; background:rgba(255,255,255,0.7); font-size:15px;">
+                                <tr style="background:#1a237e; color:white;"><th style="border:1px solid white; padding:10px;">SUBJECT NAME</th><th style="border:1px solid white;">UT-1</th><th style="border:1px solid white;">HALF YEARLY</th><th style="border:1px solid white;">UT-2</th><th style="border:1px solid white;">ANNUAL</th><th style="border:1px solid white;">TOTAL</th><th style="border:1px solid white;">GRADE</th></tr>
+                                ${tableRows}
+                            </table>
                         </div>
 
-                        <table style="width:100%; border-collapse:collapse; border:2px solid #1a237e; background:rgba(255,255,255,0.7); font-size:14px;">
-                            <tr style="background:#1a237e; color:white;"><th style="border:1px solid white;">SUBJECT NAME</th><th style="border:1px solid white;">UT-1</th><th style="border:1px solid white;">HALF YEARLY</th><th style="border:1px solid white;">UT-2</th><th style="border:1px solid white;">ANNUAL</th><th style="border:1px solid white;">TOTAL</th><th style="border:1px solid white;">GRADE</th></tr>
-                            ${tableRows}
-                        </table>
+                        <div>
+                            <div style="margin-top:15px; border:2.5px solid #b8860b; padding:15px; border-radius:15px; background:white; font-size:18px; font-weight:bold;">
+                                <table style="width:100%;"><tr><td>TOTAL: <span style="color:#d32f2f;">${grandTotal} / 600</span></td><td>PERCENT: <span style="color:#d32f2f;">${(grandTotal/6).toFixed(2)}%</span></td><td>RESULT: <span style="color:#d32f2f;">${grandTotal >= 198 ? "PASSED" : "FAILED"}</span></td></tr></table>
+                            </div>
 
-                        <div style="margin-top:15px; border:2px solid #b8860b; padding:12px; border-radius:12px; background:white; font-size:16px; font-weight:bold;">
-                            <table style="width:100%;"><tr><td>TOTAL MARKS: <span style="color:#d32f2f;">${grandTotal} / 600</span></td><td>PERCENTAGE: <span style="color:#d32f2f;">${(grandTotal/6).toFixed(2)}%</span></td><td>RESULT STATUS: <span style="color:#d32f2f;">${grandTotal >= 198 ? "PASSED" : "FAILED"}</span></td></tr></table>
+                            <div style="margin-top:15px; padding:0 5px;">
+                                <p style="margin:10px 0; font-size:16px;"><b>REMARKS:</b> <span style="color:#1a237e; border-bottom:1px solid #ccc; display:inline-block; width:80%;">${grandTotal >= 198 ? 'EXCELLENT PERFORMANCE.' : 'NEEDS IMPROVEMENT.'}</span></p>
+                                <p style="margin:10px 0; font-size:16px;"><b>PROMOTED TO CLASS:</b> <span style="color:#1a237e; font-weight:bold; border-bottom:1px solid #ccc; display:inline-block; width:70%;">${grandTotal >= 198 ? (cls==="NURSERY"?"LKG":cls==="LKG"?"UKG":"1ST") : cls}</span></p>
+                            </div>
+                            
+                            <div style="margin-top:50px; margin-bottom:20px; display:flex; justify-content:space-between; font-weight:bold; font-size:16px;">
+                                <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:8px;">CLASS TEACHER</span>
+                                <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:8px;">PRINCIPAL</span>
+                            </div>
                         </div>
-
-                        <p style="margin-top:15px; font-size:15px;"><b>REMARKS:</b> <span style="color:#1a237e;">${grandTotal >= 198 ? 'EXCELLENT PERFORMANCE.' : 'NEEDS IMPROVEMENT.'}</span></p>
-                        <p style="border-bottom:2px dashed #000; padding-bottom:10px; font-size:15px;"><b>PROMOTED TO CLASS:</b> <span style="color:#1a237e; font-weight:bold;">${grandTotal >= 198 ? (cls==="NURSERY"?"LKG":cls==="LKG"?"UKG":"1ST") : cls}</span></p>
-                        
-                        <div style="margin-top:35px; display:flex; justify-content:space-between; font-weight:bold;">
-                            <span style="border-top:2px solid #000; width:180px; text-align:center; padding-top:5px;">CLASS TEACHER</span>
-                            <span style="border-top:2px solid #000; width:180px; text-align:center; padding-top:5px;">PRINCIPAL</span>
-                        </div>
-                        
                     </div>
-                    <div style="position:absolute; bottom:3mm; left:0; width:100%; text-align:center; font-size:22px; color:#1a237e; letter-spacing: 15px; opacity:0.7;">✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿</div>
+                    <div style="position:absolute; bottom:5mm; left:0; width:100%; text-align:center; font-size:24px; color:#1a237e; letter-spacing: 18px; opacity:0.8;">✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿</div>
                 </div>`;
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0;}</style></head><body>${content}</body></html>`);
+        win.document.write(`<html><head><style>@page{size: A4; margin:0;} body{margin:0; padding:0;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
