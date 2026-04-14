@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRR Junior School - Portal</title>
     <style>
-        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --black: #000000; --school-name: #dc143c; } /* Changed to Crimson */
+        :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --black: #000000; --school-name: #4b0082; } /* Purple-Indigo for School Name */
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; text-transform: uppercase; }
         
         .nav-bar { background: var(--blue); padding: 10px; text-align: center; color: white; position: sticky; top:0; z-index:1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
@@ -240,16 +240,16 @@
                 tableRows += `<tr><td style="color:#1a237e; font-weight:bold; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="5" style="border:1px solid #1a237e; text-align:center;">GRADE BASED ACTIVITY</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e; text-align:center;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td></tr>`;
                 
                 content += `
-                <div style="width:210mm; height:297mm; padding:15mm; margin:auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase; overflow:hidden;">
+                <div style="width:210mm; height:297mm; padding:15mm; margin:auto; border:5px solid #1a237e; outline: 2px solid #1a237e; outline-offset: -12px; box-sizing:border-box; page-break-after:always; position:relative; background:white; text-transform:uppercase; overflow:hidden;">
                     
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.50; font-size:40px; color:#1a237e; z-index:0; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; padding:20px;">
-                        ${Array(100).fill('✿').join(' ')}
+                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; opacity:0.50; font-size:30px; color:#1a237e; z-index:0; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; padding:10px;">
+                        ${Array(250).fill('✿').join(' ')}
                     </div>
 
-                    <div style="position:relative; z-index:1;">
+                    <div style="position:relative; z-index:1; padding: 10px;">
                         <center>
                             <img src="logo.jpg" style="height:80px; margin-bottom:5px;">
-                            <h1 style="color:var(--school-name); margin:0; font-size:35px; -webkit-text-stroke: 0.8px #000;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                            <h1 style="color:var(--school-name); margin:0; font-size:35px; -webkit-text-stroke: 0.8px #000; filter: drop-shadow(2px 2px 2px #ccc);">K.R.R. JUNIOR HIGH SCHOOL</h1>
                             <p style="margin:5px 0; font-weight:bold; color:#000;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                             <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
                             <div style="border:2px solid #b8860b; padding:5px 30px; background:#fff3e0; color:#1a237e; font-weight:bold; display:inline-block; border-radius:15px; font-size:18px;">PROGRESS REPORT</div>
@@ -273,13 +273,13 @@
                         <p style="margin-top:20px; font-size:16px;"><b>REMARKS:</b> <span style="color:#1a237e;">${grandTotal >= 198 ? 'EXCELLENT PERFORMANCE.' : 'NEEDS IMPROVEMENT.'}</span></p>
                         <p style="border-bottom:2px dashed #000; padding-bottom:10px; font-size:16px;"><b>PROMOTED TO CLASS:</b> <span style="color:#1a237e; font-weight:bold;">${grandTotal >= 198 ? (cls==="NURSERY"?"LKG":cls==="LKG"?"UKG":"1ST") : cls}</span></p>
                         
-                        <div style="margin-top:60px; display:flex; justify-content:space-between; font-weight:bold;">
-                            <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:5px;">CLASS TEACHER</span>
-                            <span style="border-top:2px solid #000; width:200px; text-align:center; padding-top:5px;">PRINCIPAL</span>
+                        <div style="margin-top:40px; display:flex; justify-content:space-between; font-weight:bold;">
+                            <span style="border-top:2px solid #000; width:180px; text-align:center; padding-top:5px;">CLASS TEACHER</span>
+                            <span style="border-top:2px solid #000; width:180px; text-align:center; padding-top:5px;">PRINCIPAL</span>
                         </div>
                         
-                        <div style="position:absolute; bottom:5mm; left:0; width:100%; text-align:center; font-size:24px; color:#1a237e; letter-spacing: 12px; opacity:0.8;">✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿</div>
                     </div>
+                    <div style="position:absolute; bottom:3mm; left:0; width:100%; text-align:center; font-size:22px; color:#1a237e; letter-spacing: 15px; opacity:0.7;">✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿</div>
                 </div>`;
             }
         });
