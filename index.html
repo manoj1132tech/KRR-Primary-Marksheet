@@ -7,14 +7,13 @@
     <style>
         :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --black: #000000; --bg-light: #e8ecf1; }
         
-        /* Background color background aur container dono ke liye */
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); margin: 0; text-transform: uppercase; }
         
         .nav-bar { background: var(--blue); padding: 10px; text-align: center; color: white; position: sticky; top:0; z-index:1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 20px; cursor: pointer; border-radius: 5px; margin: 3px; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: var(--red); border-color: white; }
         
-        /* Container ke charon taraf space aur background color set kiya gaya hai */
+        /* FIX: Added box-sizing to keep border inside the viewport */
         .container { 
             max-width: 900px; 
             margin: 20px auto; 
@@ -23,6 +22,8 @@
             border-radius: 12px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
             border: 1px solid #ddd; 
+            box-sizing: border-box; /* Yeh border ko bahar jaane se rokega */
+            width: 95%; /* Responsive touch for smaller screens */
         }
         
         .page { display: none; }
@@ -41,7 +42,6 @@
         th { background: var(--blue); color: white; }
         .action-btn { background: var(--gold); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
         
-        /* PRINT SETTINGS: Fixes A4 size and scaling issues */
         @media print { 
             .no-print { display: none !important; } 
             @page { size: A4; margin: 0; }
