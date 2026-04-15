@@ -6,15 +6,24 @@
     <title>KRR Junior School - Portal</title>
     <style>
         :root { --blue: #1a237e; --red: #d32f2f; --gold: #b8860b; --black: #000000; --bg-light: #e8ecf1; }
-        /* Background color ko halka color diya gaya hai */
+        
+        /* Background color background aur container dono ke liye */
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); margin: 0; text-transform: uppercase; }
         
         .nav-bar { background: var(--blue); padding: 10px; text-align: center; color: white; position: sticky; top:0; z-index:1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 20px; cursor: pointer; border-radius: 5px; margin: 3px; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: var(--red); border-color: white; }
         
-        /* Margin-top ko 5px kar diya gaya hai taaki upar ka space kam ho jaye */
-        .container { max-width: 900px; margin: 5px auto 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        /* Container ke charon taraf space aur background color set kiya gaya hai */
+        .container { 
+            max-width: 900px; 
+            margin: 20px auto; 
+            background: var(--bg-light); 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            border: 1px solid #ddd; 
+        }
         
         .page { display: none; }
         .page.active { display: block; }
@@ -32,11 +41,19 @@
         th { background: var(--blue); color: white; }
         .action-btn { background: var(--gold); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
         
+        /* PRINT SETTINGS: Fixes A4 size and scaling issues */
         @media print { 
-            .no-print { display: none; } 
-            @page { size: A4; margin: 10mm; }
-            body { background: white; }
-            .container { border: none; box-shadow: none; margin: 0; padding: 0; }
+            .no-print { display: none !important; } 
+            @page { size: A4; margin: 0; }
+            body { background: white; margin: 0; padding: 0; }
+            .container { 
+                border: none; 
+                box-shadow: none; 
+                margin: 0; 
+                padding: 0; 
+                max-width: 100%;
+                background: white;
+            }
         }
     </style>
 </head>
@@ -314,7 +331,7 @@
                 let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
                 content += `
-                <div style="width:190mm; min-height:270mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
+                <div style="width:190mm; height:277mm; padding:8mm; margin:0 auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     <center>
                         <img src="logo.jpg" alt="Logo" style="height:100px; margin-bottom:5px;">
                         <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
@@ -368,7 +385,10 @@
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>PRINT</title><style>@page{size: A4; margin: 10mm;} body{margin:0; background:#eee;}</style></head><body>${content}</body></html>`);
+        win.document.write(`<html><head><title>PRINT</title><style>
+            @page{size: A4; margin: 0;} 
+            body{margin:0; background:#eee; -webkit-print-color-adjust: exact;}
+        </style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
