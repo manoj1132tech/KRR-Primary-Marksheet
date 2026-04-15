@@ -26,7 +26,11 @@
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: var(--blue); color: white; }
         .action-btn { background: var(--gold); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        @media print { .no-print { display: none; } }
+        @media print { 
+            .no-print { display: none; } 
+            @page { size: A4; margin: 10mm; }
+            body { background: white; }
+        }
     </style>
 </head>
 <body>
@@ -220,7 +224,6 @@
     function showStudentDetail() {
         const i = document.getElementById('mStudent').value;
         if(!i) return;
-        // Detail box fix: Using 50% start for Roll, Mother, DOB
         document.getElementById('mDetailBox').innerHTML = `
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
                 <div><b>STUDENT:</b> ${MASTER[i][0]}</div>
@@ -272,7 +275,6 @@
         return `<span style="${starStyle}">${stars}</span>`;
     }
 
-    // Function to add zero prefix
     function prefixZero(val) {
         if(val === "" || val === null || val === undefined) return "00";
         let n = Number(val);
@@ -294,7 +296,6 @@
                     let an = Number(m[s+'_AN']||0);
                     let t = u1 + hy + u2 + an;
                     grandTotal += t;
-                    // Added prefixZero to UT1 and UT2
                     return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${prefixZero(u1)}</td><td>${hy}</td><td>${prefixZero(u2)}</td><td>${an}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
                 }).join('');
                 
@@ -306,8 +307,9 @@
                 let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
                 content += `
-                <div style="width:190mm; min-height:277mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
+                <div style="width:190mm; min-height:270mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     <center>
+                        <img src="logo.jpg" alt="Logo" style="height:100px; margin-bottom:5px;">
                         <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
@@ -359,7 +361,7 @@
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>PRINT</title><style>@page{size: A4; margin:0;} body{margin:0; background:#eee;}</style></head><body>${content}</body></html>`);
+        win.document.write(`<html><head><title>PRINT</title><style>@page{size: A4; margin: 10mm;} body{margin:0; background:#eee;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
