@@ -26,7 +26,11 @@
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: var(--blue); color: white; }
         .action-btn { background: var(--gold); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        @media print { .no-print { display: none; } }
+        @media print { 
+            .no-print { display: none; } 
+            @page { size: A4; margin: 10mm; }
+            body { background: white; }
+        }
     </style>
 </head>
 <body>
@@ -220,7 +224,15 @@
     function showStudentDetail() {
         const i = document.getElementById('mStudent').value;
         if(!i) return;
-        document.getElementById('mDetailBox').innerHTML = `<b>STUDENT:</b> ${MASTER[i][0]}<br><b>ROLL:</b> ${MASTER[i][4]} | <b>FATHER:</b> ${MASTER[i][2]}`;
+        document.getElementById('mDetailBox').innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
+                <div><b>STUDENT:</b> ${MASTER[i][0]}</div>
+                <div style="padding-left:15%;"><b>ROLL NO:</b> ${MASTER[i][4]}</div>
+                <div><b>FATHER:</b> ${MASTER[i][2]}</div>
+                <div style="padding-left:15%;"><b>MOTHER:</b> ${MASTER[i][1]}</div>
+                <div style="grid-column: span 1;"><b>CLASS:</b> ${MASTER[i][3]}</div>
+                <div style="padding-left:15%;"><b>DOB:</b> ${MASTER[i][5]}</div>
+            </div>`;
         document.getElementById('mDetailBox').style.display = 'block';
         document.getElementById('marksForm').style.display = 'block';
     }
@@ -246,7 +258,7 @@
     }
 
     function getStars(score, isGrade = false) {
-        let starStyle = "color:#ffd700;"; // Gold Color Stars
+        let starStyle = "color:#ffd700;"; 
         let stars = "";
         if(isGrade) {
             if(score === 'A+') stars = '★★★★★';
@@ -263,6 +275,12 @@
         return `<span style="${starStyle}">${stars}</span>`;
     }
 
+    function prefixZero(val) {
+        if(val === "" || val === null || val === undefined) return "00";
+        let n = Number(val);
+        return n < 10 ? "0" + n : n;
+    }
+
     function printAll() {
         const cls = document.getElementById('pClass').value;
         let content = '';
@@ -272,22 +290,26 @@
                 let grandTotal = 0;
                 let subjects = ["HINDI ORAL", "HINDI WRITTEN", "ENGLISH ORAL", "ENGLISH WRITTEN", "MATHEMATICS ORAL", "MATHEMATICS WRITTEN"];
                 let tableRows = subjects.map(s => {
-                    let t = Number(m[s+'_UT1']||0) + Number(m[s+'_HY']||0) + Number(m[s+'_UT2']||0) + Number(m[s+'_AN']||0);
+                    let u1 = Number(m[s+'_UT1']||0);
+                    let hy = Number(m[s+'_HY']||0);
+                    let u2 = Number(m[s+'_UT2']||0);
+                    let an = Number(m[s+'_AN']||0);
+                    let t = u1 + hy + u2 + an;
                     grandTotal += t;
-                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${m[s+'_UT1']||0}</td><td>${m[s+'_HY']||0}</td><td>${m[s+'_UT2']||0}</td><td>${m[s+'_AN']||0}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
+                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${prefixZero(u1)}</td><td>${hy}</td><td>${prefixZero(u2)}</td><td>${an}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
                 }).join('');
                 
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td><td>${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td>${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td><td>${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td>${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
 
                 let perc = (grandTotal / 6).toFixed(2);
                 let status = grandTotal >= 198 ? "PASSED" : "FAILED";
                 let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
                 content += `
-                <div style="width:190mm; min-height:277mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
+                <div style="width:190mm; min-height:270mm; padding:10mm; margin:10mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     <center>
-                        <img src="logo.jpg" style="height:100px; width:auto; margin-bottom:10px;">
+                        <img src="logo.jpg" alt="Logo" style="height:100px; margin-bottom:5px;">
                         <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
@@ -296,11 +318,11 @@
                     
                     <div style="margin:10px 0 20px 0; border:2px solid #1a237e; padding:15px; border-radius:12px; display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px; background:#fcfcfc;">
                         <div>NAME: <b style="color:#1a237e;">${r[0]}</b></div>
-                        <div style="text-align:right;">ROLL NO: <b style="color:#1a237e;">${r[4]}</b></div>
+                        <div style="padding-left:15%;">ROLL NO: <b style="color:#1a237e;">${r[4]}</b></div>
                         <div>FATHER'S NAME: <b style="color:#1a237e;">${r[2]}</b></div>
-                        <div style="text-align:right;">MOTHER'S NAME: <b style="color:#1a237e;">${r[1]}</b></div>
+                        <div style="padding-left:15%;">MOTHER'S NAME: <b style="color:#1a237e;">${r[1]}</b></div>
                         <div>CLASS: <b style="color:#1a237e;">${r[3]}</b></div>
-                        <div style="text-align:right;">D.O.B: <b style="color:#1a237e;">${r[5]}</b></div>
+                        <div style="padding-left:15%;">D.O.B: <b style="color:#1a237e;">${r[5]}</b></div>
                     </div>
 
                     <table border="2" style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #1a237e; font-size:13px;">
@@ -339,7 +361,7 @@
             }
         });
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>PRINT</title><style>@page{size: A4; margin:0;} body{margin:0; background:#eee;}</style></head><body>${content}</body></html>`);
+        win.document.write(`<html><head><title>PRINT</title><style>@page{size: A4; margin: 10mm;} body{margin:0; background:#eee;}</style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
     }
