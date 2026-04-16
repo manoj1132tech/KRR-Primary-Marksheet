@@ -13,7 +13,6 @@
         .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 20px; cursor: pointer; border-radius: 5px; margin: 3px; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: var(--red); border-color: white; }
         
-        /* FIX: Added box-sizing to keep border inside the viewport */
         .container { 
             max-width: 900px; 
             margin: 20px auto; 
@@ -22,8 +21,8 @@
             border-radius: 12px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
             border: 1px solid #ddd; 
-            box-sizing: border-box; /* Yeh border ko bahar jaane se rokega */
-            width: 95%; /* Responsive touch for smaller screens */
+            box-sizing: border-box; 
+            width: 95%; 
         }
         
         .page { display: none; }
@@ -44,16 +43,8 @@
         
         @media print { 
             .no-print { display: none !important; } 
-            @page { size: A4; margin: 0; }
+            @page { size: A4; margin: 5mm; }
             body { background: white; margin: 0; padding: 0; }
-            .container { 
-                border: none; 
-                box-shadow: none; 
-                margin: 0; 
-                padding: 0; 
-                max-width: 100%;
-                background: white;
-            }
         }
     </style>
 </head>
@@ -170,14 +161,20 @@
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbxI_C21vAE2O4ai97URuiyL3kQCepWDwChh4ROvJ4jDuatP_YODjgiuL3_vrnUK-ps4uQ/exec"; 
+    const ADMIN_PASS = "KRR@2026"; // Change this password as needed
     let MASTER = [];
 
+    // Initialize Date Selects
     for(let i=1; i<=31; i++) document.getElementById('dobD').add(new Option(i < 10 ? '0'+i : i, i < 10 ? '0'+i : i));
     const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
     months.forEach((m, i) => document.getElementById('dobM').add(new Option(m, (i+1) < 10 ? '0'+(i+1) : (i+1))));
     for(let i=2024; i>=2015; i--) document.getElementById('dobY').add(new Option(i, i));
 
     function openPage(pageId) {
+        if(pageId === 'adminPage') {
+            let p = prompt("ENTER ADMIN PASSWORD:");
+            if(p !== ADMIN_PASS) return alert("ACCESS DENIED!");
+        }
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
@@ -270,10 +267,10 @@
         if(sub === "STORY TELLING" || sub === "PHYSICAL ACTIVITY") {
             marksObj[sub + "_TOTAL"] = document.getElementById('gVal').value;
         } else {
-            marksObj[sub + "_UT1"] = document.getElementById('v1').value;
-            marksObj[sub + "_HY"] = document.getElementById('v2').value;
-            marksObj[sub + "_UT2"] = document.getElementById('v3').value;
-            marksObj[sub + "_AN"] = document.getElementById('v4').value;
+            marksObj[sub + "_UT1"] = document.getElementById('v1').value || 0;
+            marksObj[sub + "_HY"] = document.getElementById('v2').value || 0;
+            marksObj[sub + "_UT2"] = document.getElementById('v3').value || 0;
+            marksObj[sub + "_AN"] = document.getElementById('v4').value || 0;
         }
         btn.disabled = true; btn.innerText = "UPDATING...";
         await fetch(API, { method: "POST", mode: 'no-cors', body: JSON.stringify({action: "updateMarks", rowIndex: parseInt(i), marksObj: marksObj}) });
@@ -282,7 +279,6 @@
     }
 
     function getStars(score, isGrade = false) {
-        let starStyle = "color:#ffd700;"; 
         let stars = "";
         if(isGrade) {
             if(score === 'A+') stars = '★★★★★';
@@ -296,11 +292,11 @@
             else if(score >= 45) stars = '★★';
             else stars = '★';
         }
-        return `<span style="${starStyle}">${stars}</span>`;
+        return `<span style="color:#ffd700;">${stars}</span>`;
     }
 
     function prefixZero(val) {
-        if(val === "" || val === null || val === undefined) return "00";
+        if(!val) return "00";
         let n = Number(val);
         return n < 10 ? "0" + n : n;
     }
@@ -320,21 +316,20 @@
                     let an = Number(m[s+'_AN']||0);
                     let t = u1 + hy + u2 + an;
                     grandTotal += t;
-                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">${s}</td><td>${prefixZero(u1)}</td><td>${hy}</td><td>${prefixZero(u2)}</td><td>${an}</td><td style="color:#d32f2f; font-weight:bold;">${t}</td><td>${getStars(t)}</td></tr>`;
+                    return `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px; border:1px solid #1a237e;">${s}</td><td style="border:1px solid #1a237e;">${prefixZero(u1)}</td><td style="border:1px solid #1a237e;">${prefixZero(hy)}</td><td style="border:1px solid #1a237e;">${prefixZero(u2)}</td><td style="border:1px solid #1a237e;">${prefixZero(an)}</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${t}</td><td style="border:1px solid #1a237e;">${getStars(t)}</td></tr>`;
                 }).join('');
                 
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['STORY TELLING_TOTAL']||'-'}</td><td>${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
-                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td>${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px; border:1px solid #1a237e;">STORY TELLING</td><td colspan="4" style="font-size:12px; color:#777; border:1px solid #1a237e;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${m['STORY TELLING_TOTAL']||'-'}</td><td style="border:1px solid #1a237e;">${getStars(m['STORY TELLING_TOTAL'], true)}</td></tr>`;
+                tableRows += `<tr><td style="color:#1a237e; font-weight:bold; text-align:left; padding-left:15px; border:1px solid #1a237e;">PHYSICAL ACTIVITY</td><td colspan="4" style="font-size:12px; color:#777; border:1px solid #1a237e;">ACTIVITY BASED GRADE</td><td style="color:#d32f2f; font-weight:bold; border:1px solid #1a237e;">${m['PHYSICAL ACTIVITY_TOTAL']||'-'}</td><td style="border:1px solid #1a237e;">${getStars(m['PHYSICAL ACTIVITY_TOTAL'], true)}</td></tr>`;
 
                 let perc = (grandTotal / 6).toFixed(2);
                 let status = grandTotal >= 198 ? "PASSED" : "FAILED";
                 let nextCls = cls === "NURSERY" ? "LKG" : (cls === "LKG" ? "UKG" : "1ST");
 
                 content += `
-                <div style="width:190mm; height:277mm; padding:8mm; margin:0 auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
+                <div style="width:185mm; height:272mm; padding:10mm; margin:5mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     <center>
-                        <img src="logo.jpg" alt="Logo" style="height:100px; margin-bottom:5px;">
-                        <h1 style="color:#1a237e; margin:0; font-size:35px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+                        <h1 style="color:#1a237e; margin:0; font-size:32px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
                         <p style="margin:5px 0; font-weight:bold;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
                         <h3 style="color:#b8860b; margin:10px 0;">SESSION: 2025-2026</h3>
                         <div style="border:2px solid #b8860b; border-radius:15px; padding:5px 40px; background:#fff3e0; display:inline-block; font-weight:bold; margin-bottom:15px;">PROGRESS REPORT</div>
@@ -349,8 +344,8 @@
                         <div style="padding-left:15%;">D.O.B: <b style="color:#1a237e;">${r[5]}</b></div>
                     </div>
 
-                    <table border="2" style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #1a237e; font-size:13px;">
-                        <tr style="background:#1a237e; color:white;"><th style="padding:10px;">SUBJECT NAME</th><th>UT-1</th><th>HALF YEARLY</th><th>UT-2</th><th>ANNUAL</th><th>TOTAL</th><th>RATING</th></tr>
+                    <table style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #1a237e; font-size:13px;">
+                        <tr style="background:#1a237e; color:white;"><th style="padding:10px; border:1px solid #fff;">SUBJECT NAME</th><th style="border:1px solid #fff;">UT-1</th><th style="border:1px solid #fff;">HALF YEARLY</th><th style="border:1px solid #fff;">UT-2</th><th style="border:1px solid #fff;">ANNUAL</th><th style="border:1px solid #fff;">TOTAL</th><th style="border:1px solid #fff;">RATING</th></tr>
                         ${tableRows}
                     </table>
 
@@ -386,8 +381,8 @@
         });
         const win = window.open('', '_blank');
         win.document.write(`<html><head><title>PRINT</title><style>
-            @page{size: A4; margin: 0;} 
-            body{margin:0; background:#eee; -webkit-print-color-adjust: exact;}
+            @page{size: A4; margin: 5mm;} 
+            body{margin:0; background:#fff; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
         </style></head><body>${content}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 1000);
