@@ -324,14 +324,16 @@
                 content += `
                 <div style="width:190mm; min-height:270mm; padding:8mm; margin:5mm auto; border:10px double #1a237e; box-sizing:border-box; page-break-after:always; text-transform:uppercase; background:white; position:relative; font-family: 'Segoe UI', sans-serif;">
                     
-                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                        <img src="logo.jpg" alt="Logo" style="width: 80px; height: 80px; margin-right: 20px;">
-                        <div style="text-align: center;">
-                            <h1 style="color:#1a237e; margin:0; font-size:38px; letter-spacing: 1px;">K.R.R. JUNIOR HIGH SCHOOL</h1>
-                            <p style="margin:2px 0; text-align:center;font-weight:bold; font-size: 16px;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
-                        </div>
-                    </div>
+                    /* --- REPLACE THE HEADER SECTION INSIDE printAll() WITH THIS --- */
 
+<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #1a237e; padding-bottom: 10px;">
+    <div style="flex: 0 0 80px;">
+        <img src="logo.jpg" alt="Logo" style="width: 80px; height: 80px; object-fit: contain;">
+    </div>
+    <div style="flex: 1; text-align: center; padding-right: 80px;"> <h1 style="color:#1a237e; margin:0; font-size:35px; letter-spacing: 1px; line-height: 1.2;">K.R.R. JUNIOR HIGH SCHOOL</h1>
+        <p style="margin:5px 0 0 0; font-weight:bold; font-size: 16px; color: #333;">MANPUR, BAHERI, BAREILLY (U.P.)</p>
+    </div>
+</div>
                     <center>
                         <h3 style="color:#b8860b; margin:5px 0;">SESSION: 2025-2026</h3>
                         <div style="border:2px solid #b8860b; border-radius:15px; padding:5px 40px; background:#fff3e0; display:inline-block; font-weight:bold; margin-bottom:15px;">PROGRESS REPORT</div>
